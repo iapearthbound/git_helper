@@ -42,26 +42,32 @@ case "$menu" in
 	"G" | "g" )
 		#Global Git Setup
 			GLOBAL_SETUP
+			REPO_MENU
 	;;
 	"S" | "s" )
 		#New Repo Setup
 			NEW_REPO
+			REPO_MENU
 	;;
 	"R" | "r" )
 		#Clone a Repo
 			GIT_CLONE
+			REPO_MENU
 	;;
 	"F" | "f" )
 		#Add a File to your Repo
 			ADD_FILE
+			REPO_MENU
 	;;
 	"C" | "c" )
 		#Commit Files
 			ADD_COMMIT
+			REPO_MENU
 	;;
 	"P" | "p" )
 		#Push Commits to Git Repo
 			PUSH
+			REPO_MENU
 	;;
 	"X" | "x" )
 		exit	
