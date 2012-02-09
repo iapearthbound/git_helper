@@ -19,26 +19,61 @@ txtrst=$(tput sgr0) # Text reset
 txtbld=$(tput bold) #
 
 #functions
-function CLONE_REPO()
+function REPO_MENU()
 {
-	echo	$(tput bold) $(tput setaf 1)
+	echo	$(tput bold) $(tput setaf 6)
 	echo " __________________________________________________________ "
 	echo "| Have you Forked The Repo Or Would you Like to Clone      |"
 	echo "|----------------------------------------------------------|"
 	echo "  [G] Global Setup"
 	echo "  [S] Setup a new Repo"
-	echo "  [C] Clone a Repo"
-	echo "  [N] New Repo Setup"
+	echo "  [R] Clone a Repo"
+	echo "  [F] Add a Files to your repo"
+	echo "  [C] Add a Commit"
+	echo "  [P] Push Commit to Git Repo"
 	echo "  [X] Exit"
 	echo "|----------------------------------------------------------|"
 	echo "| Please Type Your Choice & Press Enter                    |"
 	echo "|__________________________________________________________|"
 
-read clone
+read menu
 
-case "$clone" in
+case "$menu" in
 	"G" | "g" )
-		echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
+		#Global Git Setup
+			GLOBAL_SETUP
+	;;
+	"S" | "s" )
+		#New Repo Setup
+			NEW_REPO
+	;;
+	"R" | "r" )
+		#Clone a Repo
+			GIT_CLONE
+	;;
+	"F" | "f" )
+		#Add a File to your Repo
+			ADD_FILE
+	;;
+	"C" | "c" )
+		#Commit Files
+			ADD_COMMIT
+	;;
+	"P" | "p" )
+		#Push Commits to Git Repo
+			PUSH
+	;;
+	"X" | "x" )
+		exit	
+	;;
+esac
+}
+
+#functions
+function GLOBAL_SETUP()
+{
+	#Gloabl Git Setup
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 1)
 		echo " __________________________________________________________ "
 		echo "| Git Global Setup                                         |"
 		echo "|----------------------------------------------------------|"
@@ -49,9 +84,13 @@ case "$clone" in
 		echo "|----------------------------------------------------------|"
 		echo "| Global Settings Have Been Set                            |"
 		echo "|__________________________________________________________|"
-	;;
-	"S" | "s" )
-		echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
+}
+
+#functions
+function NEW_REPO()
+{
+	#New Repo Setup
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
 		echo " __________________________________________________________ "
 		echo "| New Repo Setup                                           |"
 		echo "|----------------------------------------------------------|"
@@ -59,6 +98,10 @@ case "$clone" in
 		mkdir $REPO_NAME
 		cd $REPO_NAME
 		git init
+		echo "|----------------------------------------------------------|"
+		echo "| Repo Directory Has Been Setup                            |"
+		echo "|__________________________________________________________|"
+		echo
 		echo " __________________________________________________________ "
 		echo "| *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*  |"
 		echo "|----------------------------------------------------------|"
@@ -71,31 +114,24 @@ case "$clone" in
 		ADD_COMMIT
 		ADD_ORIGIN_REMOTE
 		PUSH
-	;;
-	"C" | "c" )
-		echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
+}
+#functions
+function GIT_CLONE()
+{
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 4)
 		echo " __________________________________________________________ "
-		echo "| Checking input your user name for git                    |"
+		echo "| Clone a Repo                                             |"
 		echo "|----------------------------------------------------------|"
 		read -p "Enter Forked Repo Address : " REPO_ADDRESS
 		git clone $REPO_ADDRESS
 		echo "|----------------------------------------------------------|"
-		echo "| Directories Cleaned Successfully                         |"
 		echo "|__________________________________________________________|"
-	;;
-	"N" | "n" )
-	;;
-	"X" | "x" )
-		exit	
-	;;
-esac
 }
-
 #functions
 function ADD_FILE()
 {
 
-			echo	$(tput bold) $(tput setaf 1)
+			echo	$(tput sgr0) $(tput bold) $(tput setaf 5)
 			echo " __________________________________________________________ "
 			echo "| Would You Like to Add a File to your Repo                |"
 			echo "|----------------------------------------------------------|"
@@ -127,12 +163,12 @@ function ADD_FILE()
 function ADD_COMMIT()
 {
 
-		echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 1)
 		echo " __________________________________________________________ "
 		echo "| Please Input your commit message(use _ instead of spaces)|"
 		echo "|----------------------------------------------------------|"
 		read -p "Enter Commit Message : " COMMIT_MESSAGE
-		git commit -m $COMMIT_MESSAGE
+		git commit -a -m $COMMIT_MESSAGE
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
 }
@@ -154,7 +190,7 @@ function ADD_ORIGIN_REMOTE()
 function PUSH()
 {
 
-		echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
 		echo " __________________________________________________________ "
 		echo "| Push Your Changes to your Repo (master = main repo)      |"
 		echo "|----------------------------------------------------------|"
@@ -166,4 +202,5 @@ function PUSH()
 
 
 #Main
-CLONE_REPO
+REPO_MENU
+tput sgr0
