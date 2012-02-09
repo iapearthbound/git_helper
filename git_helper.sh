@@ -23,7 +23,7 @@ function REPO_MENU()
 {
 	echo	$(tput bold) $(tput setaf 6)
 	echo " __________________________________________________________ "
-	echo "| Have you Forked The Repo Or Would you Like to Clone      |"
+	echo "| Git Helper Menu                                          |"
 	echo "|----------------------------------------------------------|"
 	echo "  [G] Global Setup"
 	echo "  [S] Setup a new Repo"
@@ -31,6 +31,10 @@ function REPO_MENU()
 	echo "  [F] Add a Files to your repo"
 	echo "  [C] Add a Commit"
 	echo "  [P] Push Commit to Git Repo"
+	echo "  [B] Create a New Branch"
+	echo "  [V] View Branches"
+	echo "  [Y] Switch Branches"
+	echo "  [M] Merge <-(switch to branch to merge into before using)"
 	echo "  [X] Exit"
 	echo "|----------------------------------------------------------|"
 	echo "| Please Type Your Choice & Press Enter                    |"
@@ -67,6 +71,26 @@ case "$menu" in
 	"P" | "p" )
 		#Push Commits to Git Repo
 			PUSH
+			REPO_MENU
+	;;
+	"B" | "b" )
+		#Create a New Branch & Push Branch
+			BRANCH
+			REPO_MENU
+	;;
+	"V" | "v" )
+		#View Branchs
+			VIEW_BRANCHES
+			REPO_MENU
+	;;
+	"Y" | "y" )
+		#Checkout a branch (will change state of file system)
+			CHECKOUT_BRANCH
+			REPO_MENU
+	;;
+	"M" | "m" )
+		#Merge a Branch
+			MERGE_BRANCH
 			REPO_MENU
 	;;
 	"X" | "x" )
@@ -144,7 +168,6 @@ function ADD_FILE()
 			echo "  [Y] Yes"
 			echo "  [N] NO"
 			echo "|----------------------------------------------------------|"
-			echo "| Please Type Your Choice & Press Enter                    |"
 			echo "|__________________________________________________________|"
 		read add_file
 			case "$add_file" in
@@ -156,7 +179,6 @@ function ADD_FILE()
 					read -p "Enter File Name : " FILE_NAME
 					git add $FILE_NAME
 					echo "|----------------------------------------------------------|"
-					echo "| Directories Cleaned Successfully                         |"
 					echo "|__________________________________________________________|"
 					ADD_FILE
 				;;
@@ -206,6 +228,110 @@ function PUSH()
 		echo "|__________________________________________________________|"
 }
 
+function BRANCH()
+{
+
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
+		echo " __________________________________________________________ "
+		echo "| Create a Branch                                          |"
+		echo "|----------------------------------------------------------|"
+		read -p "Enter Branch Name : " BRANCH_NAME
+		git branch $BRANCH_NAME
+		echo "|----------------------------------------------------------|"
+		echo "|__________________________________________________________|"
+		PUSH
+}
+
+function VIEW_BRANCHES()
+{
+
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
+		echo " __________________________________________________________ "
+		echo "| Create a Branch                                          |"
+		echo "|----------------------------------------------------------|"
+		git branch
+		echo "|----------------------------------------------------------|"
+		echo "|__________________________________________________________|"
+}
+
+function CHECKOUT_BRANCH()
+{
+
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
+		echo " __________________________________________________________ "
+		echo "| Create a Branch                                          |"
+		echo "|----------------------------------------------------------|"
+		read -p "Enter Branch Name : " BRANCH_NAME
+		git checkout $BRANCH_NAME
+		echo "|----------------------------------------------------------|"
+		echo "|__________________________________________________________|"
+}
+
+function MERGE_BRANCH()
+{
+	#Merge Branches
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
+		echo " __________________________________________________________ "
+		echo "| Create a Branch                                          |"
+		echo "|----------------------------------------------------------|"
+		read -p "Enter Branch Name : " BRANCH_NAME
+		git merge $BRANCH_NAME
+		echo "|----------------------------------------------------------|"
+		echo "|__________________________________________________________|"
+		MERGE_BRANCH2
+		
+
+}
+
+#function
+function MERGE_BRANCH2()
+{
+		echo	$(tput sgr0) $(tput bold) $(tput setaf 6)
+		echo " __________________________________________________________ "
+		echo "| If there were errors Choose   D                          |"
+		echo "|----------------------------------------------------------|"
+		echo "  [D] Show Conflicts <-(fix if needed) "
+		echo "  [C] Commit/Review/Push"
+		echo "  [X] Choose If There Were No Errors"
+		echo "|----------------------------------------------------------|"
+		echo "| Please Type Your Choice & Press Enter                    |"
+		echo "|__________________________________________________________|"
+		read diff
+			case "$diff" in
+				"D" | "d" )
+				echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
+				echo " __________________________________________________________ "
+				echo "| Please Fix These Before Commiting                        |"
+				echo "|----------------------------------------------------------|"
+				git diff
+				echo "|----------------------------------------------------------|"
+				echo "|__________________________________________________________|"
+				echo	$(tput sgr0) $(tput bold) $(tput setaf 1)
+				echo " __________________________________________________________ "
+				echo "|        *PLEASE FIX DIFF FILES BEFORE CONTINUING*         |"
+				echo "|----------------------------------------------------------|"
+				echo "       When you are finished press enter to continue"
+				echo "|----------------------------------------------------------|"
+				echo "|        *PLEASE FIX DIFF FILES BEFORE CONTINUING*         |"
+				echo "|__________________________________________________________|"
+				read -p "Press [Enter] key to start backup..."
+				MERGE_BRANCH2
+			;;
+			"C" | "c" )
+				ADD_COMMIT
+				echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
+				echo " __________________________________________________________ "
+				echo "|      *Showing Graphical Representation of History*       |"
+				echo "|----------------------------------------------------------|"
+				gitk
+				echo "|----------------------------------------------------------|"
+				echo "|__________________________________________________________|"
+				PUSH
+			;;
+			"X" | "x" )	
+			;;
+		esac
+}
 
 #Main
 REPO_MENU
