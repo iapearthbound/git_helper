@@ -247,7 +247,7 @@ function VIEW_BRANCHES()
 
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
 		echo " __________________________________________________________ "
-		echo "| Create a Branch                                          |"
+		echo "| View Branches                                            |"
 		echo "|----------------------------------------------------------|"
 		git branch
 		echo "|----------------------------------------------------------|"
@@ -259,7 +259,7 @@ function CHECKOUT_BRANCH()
 
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
 		echo " __________________________________________________________ "
-		echo "| Create a Branch                                          |"
+		echo "| Switch to a Branch                                       |"
 		echo "|----------------------------------------------------------|"
 		read -p "Enter Branch Name : " BRANCH_NAME
 		git checkout $BRANCH_NAME
@@ -272,7 +272,7 @@ function MERGE_BRANCH()
 	#Merge Branches
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
 		echo " __________________________________________________________ "
-		echo "| Create a Branch                                          |"
+		echo "| Merge a Branch                                           |"
 		echo "|----------------------------------------------------------|"
 		read -p "Enter Branch Name : " BRANCH_NAME
 		git merge $BRANCH_NAME
