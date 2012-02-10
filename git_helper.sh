@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# One script to rules them all... ;)
-# Functions to create Samurai Specific Kernels...
+# Git Helper Functions...
 #
 #
 # 2012 EarthBound.IAP
@@ -35,7 +34,7 @@ function REPO_MENU()
 	echo "  [V] View Branches"
 	echo "  [Y] Switch Branches"
 	echo "  [M] Merge <-(switch to branch to merge into before using)"
-	echo "  [X] Exit"
+	echo "  [X] Exit <- (exit back to build Menu)"
 	echo "|----------------------------------------------------------|"
 	echo "| Please Type Your Choice & Press Enter                    |"
 	echo "|__________________________________________________________|"
@@ -94,7 +93,7 @@ case "$menu" in
 			REPO_MENU
 	;;
 	"X" | "x" )
-		exit	
+	./build_kernel.sh
 	;;
 esac
 }
@@ -114,6 +113,7 @@ function GLOBAL_SETUP()
 		echo "|----------------------------------------------------------|"
 		echo "| Global Settings Have Been Set                            |"
 		echo "|__________________________________________________________|"
+		read -p "Press [Enter] key to continue..."
 }
 
 #functions
@@ -139,7 +139,7 @@ function NEW_REPO()
 		echo "|----------------------------------------------------------|"
 		echo "| *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*  |"
 		echo "|__________________________________________________________|"
-		read -p "Press [Enter] key to start backup..."
+		read -p "Press [Enter] key to continue..."
 		ADD_FILE
 		ADD_COMMIT
 		ADD_ORIGIN_REMOTE
@@ -156,6 +156,7 @@ function GIT_CLONE()
 		git clone $REPO_ADDRESS
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
+		read -p "Press [Enter] key to continue..."
 }
 #functions
 function ADD_FILE()
@@ -199,6 +200,7 @@ function ADD_COMMIT()
 		git commit -a -m $COMMIT_MESSAGE
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
+		read -p "Press [Enter] key to continue..."
 }
 
 #functions
@@ -213,6 +215,7 @@ function ADD_ORIGIN_REMOTE()
 		git remote add origin $REMOTE_ORIGIN
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
+		read -p "Press [Enter] key to continue..."
 }
 
 function PUSH()
@@ -226,6 +229,7 @@ function PUSH()
 		git push origin $BRANCH_NAME
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
+		read -p "Press [Enter] key to continue..."
 }
 
 function BRANCH()
@@ -239,6 +243,7 @@ function BRANCH()
 		git branch $BRANCH_NAME
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
+		read -p "Press [Enter] key to continue..."
 		PUSH
 }
 
@@ -250,13 +255,17 @@ function VIEW_BRANCHES()
 		echo "| View Branches                                            |"
 		echo "|----------------------------------------------------------|"
 		git branch
+		tput sgr0
+		tput bold
+		tput setaf 3
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
+		read -p "Press [Enter] key to continue..."
 }
 
 function CHECKOUT_BRANCH()
 {
-
+		VIEW_BRANCHES
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
 		echo " __________________________________________________________ "
 		echo "| Switch to a Branch                                       |"
@@ -265,17 +274,21 @@ function CHECKOUT_BRANCH()
 		git checkout $BRANCH_NAME
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
+		read -p "Press [Enter] key to continue..."
 }
 
 function MERGE_BRANCH()
 {
 	#Merge Branches
+		VIEW_BRANCHES
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
 		echo " __________________________________________________________ "
 		echo "| Merge a Branch                                           |"
 		echo "|----------------------------------------------------------|"
-		read -p "Enter Branch Name : " BRANCH_NAME
-		git merge $BRANCH_NAME
+		read -p "Enter Branch You Would Like To Merge Into : " INTO_BRANCH
+		git checkout $INTO_BRANCH
+		read -p "Enter Branch Name That Is Being Merged : " MERGE_BRANCH
+		git merge $MERGE_BRANCH
 		echo "|----------------------------------------------------------|"
 		echo "|__________________________________________________________|"
 		MERGE_BRANCH2
@@ -294,7 +307,6 @@ function MERGE_BRANCH2()
 		echo "  [C] Commit/Review/Push"
 		echo "  [X] Choose If There Were No Errors"
 		echo "|----------------------------------------------------------|"
-		echo "| Please Type Your Choice & Press Enter                    |"
 		echo "|__________________________________________________________|"
 		read diff
 			case "$diff" in
@@ -314,7 +326,7 @@ function MERGE_BRANCH2()
 				echo "|----------------------------------------------------------|"
 				echo "|        *PLEASE FIX DIFF FILES BEFORE CONTINUING*         |"
 				echo "|__________________________________________________________|"
-				read -p "Press [Enter] key to start backup..."
+				read -p "Press [Enter] key to continue..."
 				MERGE_BRANCH2
 			;;
 			"C" | "c" )
@@ -326,6 +338,7 @@ function MERGE_BRANCH2()
 				gitk
 				echo "|----------------------------------------------------------|"
 				echo "|__________________________________________________________|"
+				read -p "Press [Enter] key to continue..."
 				PUSH
 			;;
 			"X" | "x" )	
@@ -335,4 +348,3 @@ function MERGE_BRANCH2()
 
 #Main
 REPO_MENU
-tput sgr0
