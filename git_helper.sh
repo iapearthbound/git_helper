@@ -17,13 +17,29 @@ txtwht=$(tput setaf 7) # White
 txtrst=$(tput sgr0) # Text reset
 txtbld=$(tput bold) #
 
-#functions
+#enter directory in which you would like git help
+function ENTER_DIRECTORY()
+{
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| Please enter name of the repo you would like help with  (folder name)        |"
+	echo "|------------------------------------------------------------------------------|"
+		read -p "Enter Your Name : " REPO_DIRECTORY
+		cd ~/$REPO_DIRECTORY
+		$PWD
+	echo "|------------------------------------------------------------------------------|"
+	echo "| Please Type Your Choice & Press Enter                                        |"
+	echo "|______________________________________________________________________________|"
+	REPO_MENU
+}
+
+#functions (git helper menu)
 function REPO_MENU()
 {
-	echo	$(tput bold) $(tput setaf 6)
-	echo " __________________________________________________________ "
-	echo "| Git Helper Menu                                          |"
-	echo "|----------------------------------------------------------|"
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| Git Helper Menu                                                              |"
+	echo "|------------------------------------------------------------------------------|"
 	echo "  [G] Global Setup"
 	echo "  [S] Setup a new Repo"
 	echo "  [R] Clone a Repo"
@@ -35,9 +51,9 @@ function REPO_MENU()
 	echo "  [Y] Switch Branches"
 	echo "  [M] Merge <-(switch to branch to merge into before using)"
 	echo "  [X] Exit <- (exit back to build Menu)"
-	echo "|----------------------------------------------------------|"
-	echo "| Please Type Your Choice & Press Enter                    |"
-	echo "|__________________________________________________________|"
+	echo "|------------------------------------------------------------------------------|"
+	echo "| Please Type Your Choice & Press Enter                                        |"
+	echo "|______________________________________________________________________________|"
 
 read menu
 
@@ -93,94 +109,95 @@ case "$menu" in
 			REPO_MENU
 	;;
 	"X" | "x" )
-	./build_kernel.sh
+		#Restart ./build_kernel.sh
+			./build_kernel.sh
 	;;
 esac
 }
 
-#functions
+#functions (git global setup)
 function GLOBAL_SETUP()
 {
 	#Gloabl Git Setup
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 1)
-		echo " __________________________________________________________ "
-		echo "| Git Global Setup                                         |"
-		echo "|----------------------------------------------------------|"
+		echo " ___________________________________________________________________________________ "
+		echo "| Git Global Setup                                                                  |"
+		echo "|-----------------------------------------------------------------------------------|"
 		read -p "Enter Your Name : " USER_NAME
 		git config --global user.name $USER_NAME
 		read -p "Enter Your Email Address : " EMAIL_ADDRESS
 		git config --global user.email $EMAIL_ADDRESS
-		echo "|----------------------------------------------------------|"
-		echo "| Global Settings Have Been Set                            |"
-		echo "|__________________________________________________________|"
+		echo "|-----------------------------------------------------------------------------------|"
+		echo "| Global Settings Have Been Set                                                     |"
+		echo "|___________________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 }
 
-#functions
+#functions (create a new repo)
 function NEW_REPO()
 {
 	#New Repo Setup
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
-		echo " __________________________________________________________ "
-		echo "| New Repo Setup                                           |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| New Repo Setup                                                               |"
+		echo "|------------------------------------------------------------------------------|"
 		read -p "Enter Repo Name : " REPO_NAME
 		mkdir $REPO_NAME
 		cd $REPO_NAME
 		git init
-		echo "|----------------------------------------------------------|"
-		echo "| Repo Directory Has Been Setup                            |"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "| Repo Directory Has Been Setup                                                |"
+		echo "|______________________________________________________________________________|"
 		echo
-		echo " __________________________________________________________ "
-		echo "| *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*  |"
-		echo "|----------------------------------------------------------|"
-		echo "       When you are finished press enter to continue"
-		echo "|----------------------------------------------------------|"
-		echo "| *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*  |"
-		echo "|__________________________________________________________|"
+		echo " ______________________________________________________________________________ "
+		echo "|          *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*             |"
+		echo "|------------------------------------------------------------------------------|"
+		echo "                When you are finished press enter to continue"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|          *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*             |"
+		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 		ADD_FILE
 		ADD_COMMIT
 		ADD_ORIGIN_REMOTE
 		PUSH
 }
-#functions
+#functions (clone a git repository)
 function GIT_CLONE()
 {
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 4)
-		echo " __________________________________________________________ "
-		echo "| Clone a Repo                                             |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| Clone a Repo                                                                 |"
+		echo "|------------------------------------------------------------------------------|"
 		read -p "Enter Forked Repo Address : " REPO_ADDRESS
 		git clone $REPO_ADDRESS
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 }
-#functions
+#functions (add a file to git repo)
 function ADD_FILE()
 {
 
 			echo	$(tput sgr0) $(tput bold) $(tput setaf 5)
-			echo " __________________________________________________________ "
-			echo "| Would You Like to Add a File to your Repo                |"
-			echo "|----------------------------------------------------------|"
+			echo " ______________________________________________________________________________ "
+			echo "| Would You Like to Add a File to your Repo                                    |"
+			echo "|------------------------------------------------------------------------------|"
 			echo "  [Y] Yes"
 			echo "  [N] NO"
-			echo "|----------------------------------------------------------|"
-			echo "|__________________________________________________________|"
+			echo "|------------------------------------------------------------------------------|"
+			echo "|______________________________________________________________________________|"
 		read add_file
 			case "$add_file" in
 				"Y" | "y" )
 					echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
-					echo " __________________________________________________________ "
-					echo "| Please Input dir if it is not located in repo            |"
-					echo "|----------------------------------------------------------|"
+					echo " ______________________________________________________________________________ "
+					echo "| Please Input dir if it is not located in repo                                |"
+					echo "|------------------------------------------------------------------------------|"
 					read -p "Enter File Name : " FILE_NAME
 					git add $FILE_NAME
-					echo "|----------------------------------------------------------|"
-					echo "|__________________________________________________________|"
+					echo "|------------------------------------------------------------------------------|"
+					echo "|______________________________________________________________________________|"
 					ADD_FILE
 				;;
 				"N" | "n" )
@@ -188,156 +205,161 @@ function ADD_FILE()
 				esac
 }
 
-#functions
+#functions (commit changes to repo)
 function ADD_COMMIT()
 {
 
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 1)
-		echo " __________________________________________________________ "
-		echo "| Please Input your commit message(use _ instead of spaces)|"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| Please Input your commit message(use _ instead of spaces)                    |"
+		echo "|------------------------------------------------------------------------------|"
 		read -p "Enter Commit Message : " COMMIT_MESSAGE
 		git commit -a -m $COMMIT_MESSAGE
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 }
 
-#functions
+#functions (add origin remote)
 function ADD_ORIGIN_REMOTE()
 {
 
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
-		echo " __________________________________________________________ "
-		echo "| Please Enter Your Origin Remote Address                  |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| Please Enter Your Origin Remote Address                                      |"
+		echo "|------------------------------------------------------------------------------|"
 		read -p "Enter Remote Address : " REMOTE_ORIGIN
 		git remote add origin $REMOTE_ORIGIN
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 }
 
+#function (push commits to git repo)
 function PUSH()
 {
 
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
-		echo " __________________________________________________________ "
-		echo "| Push Your Changes to your Repo (master = main repo)      |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| Push Your Changes to your Repo (master = main repo)                          |"
+		echo "|------------------------------------------------------------------------------|"
 		read -p "Enter Branch Name : " BRANCH_NAME
 		git push origin $BRANCH_NAME
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 }
 
+#function (create a new branch)
 function BRANCH()
 {
 
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
-		echo " __________________________________________________________ "
-		echo "| Create a Branch                                          |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| Create a Branch                                                              |"
+		echo "|------------------------------------------------------------------------------|"
 		read -p "Enter Branch Name : " BRANCH_NAME
 		git branch $BRANCH_NAME
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 		PUSH
 }
 
+#function (view branches)
 function VIEW_BRANCHES()
 {
 
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
-		echo " __________________________________________________________ "
-		echo "| View Branches                                            |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| View Branches                                                                |"
+		echo "|------------------------------------------------------------------------------|"
 		git branch
 		tput sgr0
 		tput bold
 		tput setaf 3
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 }
 
+#function (switch to a branch)
 function CHECKOUT_BRANCH()
 {
 		VIEW_BRANCHES
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
-		echo " __________________________________________________________ "
-		echo "| Switch to a Branch                                       |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| Switch to a Branch                                                           |"
+		echo "|------------------------------------------------------------------------------|"
 		read -p "Enter Branch Name : " BRANCH_NAME
 		git checkout $BRANCH_NAME
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
 }
 
+#function (merge a branch)
 function MERGE_BRANCH()
 {
 	#Merge Branches
 		VIEW_BRANCHES
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 3)
-		echo " __________________________________________________________ "
-		echo "| Merge a Branch                                           |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| Merge a Branch                                                               |"
+		echo "|------------------------------------------------------------------------------|"
 		read -p "Enter Branch You Would Like To Merge Into : " INTO_BRANCH
 		git checkout $INTO_BRANCH
 		read -p "Enter Branch Name That Is Being Merged : " MERGE_BRANCH
 		git merge $MERGE_BRANCH
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		MERGE_BRANCH2
 		
 
 }
 
-#function
+#function (part 2 of branch merge)
 function MERGE_BRANCH2()
 {
 		echo	$(tput sgr0) $(tput bold) $(tput setaf 6)
-		echo " __________________________________________________________ "
-		echo "| If there were errors Choose   D                          |"
-		echo "|----------------------------------------------------------|"
+		echo " ______________________________________________________________________________ "
+		echo "| If there were errors Choose   D                                              |"
+		echo "|------------------------------------------------------------------------------|"
 		echo "  [D] Show Conflicts <-(fix if needed) "
 		echo "  [C] Commit/Review/Push"
 		echo "  [X] Choose If There Were No Errors"
-		echo "|----------------------------------------------------------|"
-		echo "|__________________________________________________________|"
+		echo "|------------------------------------------------------------------------------|"
+		echo "|______________________________________________________________________________|"
 		read diff
 			case "$diff" in
 				"D" | "d" )
 				echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
-				echo " __________________________________________________________ "
-				echo "| Please Fix These Before Commiting                        |"
-				echo "|----------------------------------------------------------|"
+				echo " ______________________________________________________________________________ "
+				echo "| Please Fix These Before Commiting                                            |"
+				echo "|------------------------------------------------------------------------------|"
 				git diff
-				echo "|----------------------------------------------------------|"
-				echo "|__________________________________________________________|"
+				echo "|------------------------------------------------------------------------------|"
+				echo "|______________________________________________________________________________|"
 				echo	$(tput sgr0) $(tput bold) $(tput setaf 1)
-				echo " __________________________________________________________ "
-				echo "|        *PLEASE FIX DIFF FILES BEFORE CONTINUING*         |"
-				echo "|----------------------------------------------------------|"
-				echo "       When you are finished press enter to continue"
-				echo "|----------------------------------------------------------|"
-				echo "|        *PLEASE FIX DIFF FILES BEFORE CONTINUING*         |"
-				echo "|__________________________________________________________|"
+				echo " ______________________________________________________________________________ "
+				echo "|                 *PLEASE FIX DIFF FILES BEFORE CONTINUING*                    |"
+				echo "|------------------------------------------------------------------------------|"
+				echo "              When you are finished press enter to continue"
+				echo "|------------------------------------------------------------------------------|"
+				echo "|                 *PLEASE FIX DIFF FILES BEFORE CONTINUING*                    |"
+				echo "|______________________________________________________________________________|"
 				read -p "Press [Enter] key to continue..."
 				MERGE_BRANCH2
 			;;
 			"C" | "c" )
 				ADD_COMMIT
 				echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
-				echo " __________________________________________________________ "
-				echo "|      *Showing Graphical Representation of History*       |"
-				echo "|----------------------------------------------------------|"
+				echo " ______________________________________________________________________________ "
+				echo "|               *Showing Graphical Representation of History*                  |"
+				echo "|------------------------------------------------------------------------------|"
 				gitk
-				echo "|----------------------------------------------------------|"
-				echo "|__________________________________________________________|"
+				echo "|------------------------------------------------------------------------------|"
+				echo "|______________________________________________________________________________|"
 				read -p "Press [Enter] key to continue..."
 				PUSH
 			;;
@@ -346,5 +368,5 @@ function MERGE_BRANCH2()
 		esac
 }
 
-#Main
-REPO_MENU
+#main
+ENTER_DIRECTORY
