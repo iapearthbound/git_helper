@@ -17,30 +17,6 @@ txtwht=$(tput setaf 7) # White
 txtrst=$(tput sgr0) # Text reset
 txtbld=$(tput bold) #
 
-#enter directory in which you would like git help
-function ENTER_DIRECTORY()
-{
-	echo	$(tput bold) $(tput setaf 1)
-	echo " ______________________________________________________________________________ "
-	echo "| Please enter name of the repo you would like help with  (folder name)        |"
-	echo "|------------------------------------------------------------------------------|"
-		cd ~/
-		read -p "  ENTER FOLDER NAME : " REPO_DIRECTORY
-		if [ -e $REPO_DIRECTORY ] ; then
-			cd ~/$REPO_DIRECTORY
-		else
-			echo "|------------------------------------------------------------------------------|"
-			echo "|                    File Does Not Exist In Home Directory                     |"
-			echo "|______________________________________________________________________________|"
-			read -p "Press [Enter] key to continue..."
-			ENTER_DIRECTORY
-		fi
-	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
-	echo "|______________________________________________________________________________|"
-	REPO_MENU
-}
-
 #functions (git helper menu)
 function REPO_MENU()
 {
@@ -58,7 +34,7 @@ function REPO_MENU()
 	echo "  [V] View Branches"
 	echo "  [Y] Switch Branches"
 	echo "  [M] Merge <-(switch to branch to merge into before using)"
-	echo "  [E] Enter/Switch Directory"
+	echo "  [E] Enter/Switch Repo Directory"
 	echo "  [A] Stash Changes"
 	echo "  [X] Exit <- (exit back to build Menu)"
 	echo "|------------------------------------------------------------------------------|"
@@ -402,6 +378,30 @@ function MERGE_BRANCH2()
 		esac
 }
 
+#enter directory in which you would like git help
+function ENTER_DIRECTORY()
+{
+	echo	$(tput bold) $(tput setaf 1)
+	echo " ______________________________________________________________________________ "
+	echo "| Please enter name of the repo you would like help with  (folder name)        |"
+	echo "|------------------------------------------------------------------------------|"
+		cd ~/
+		read -p "  ENTER FOLDER NAME : " REPO_DIRECTORY
+		if [ -e $REPO_DIRECTORY ] ; then
+			cd ~/$REPO_DIRECTORY
+		else
+			echo "|------------------------------------------------------------------------------|"
+			echo "|                    File Does Not Exist In Home Directory                     |"
+			echo "|______________________________________________________________________________|"
+			read -p "Press [Enter] key to continue..."
+			ENTER_DIRECTORY
+		fi
+	echo "|------------------------------------------------------------------------------|"
+	echo "| CURRENT REPO : $PWD"
+	echo "|______________________________________________________________________________|"
+	REPO_MENU
+}
+
 #functions (git stash)
 function GIT_STASH()
 {
@@ -470,4 +470,4 @@ esac
 }
 
 #main
-ENTER_DIRECTORY
+REPO_MENU
