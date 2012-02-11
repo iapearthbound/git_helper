@@ -20,15 +20,23 @@ txtbld=$(tput bold) #
 #enter directory in which you would like git help
 function ENTER_DIRECTORY()
 {
-	echo	$(tput bold) $(tput setaf 2)
+	echo	$(tput bold) $(tput setaf 1)
 	echo " ______________________________________________________________________________ "
 	echo "| Please enter name of the repo you would like help with  (folder name)        |"
 	echo "|------------------------------------------------------------------------------|"
-		read -p "Enter Your Name : " REPO_DIRECTORY
-		cd ~/$REPO_DIRECTORY
-		$PWD
+		cd ~/
+		read -p "  ENTER FOLDER NAME : " REPO_DIRECTORY
+		if [ -e $REPO_DIRECTORY ] ; then
+			cd ~/$REPO_DIRECTORY
+		else
+			echo "|------------------------------------------------------------------------------|"
+			echo "|                    File Does Not Exist In Home Directory                     |"
+			echo "|______________________________________________________________________________|"
+			read -p "Press [Enter] key to continue..."
+			ENTER_DIRECTORY
+		fi
 	echo "|------------------------------------------------------------------------------|"
-	echo "| Please Type Your Choice & Press Enter                                        |"
+	echo "  CURRENT REPO : $PWD"
 	echo "|______________________________________________________________________________|"
 	REPO_MENU
 }
@@ -50,9 +58,10 @@ function REPO_MENU()
 	echo "  [V] View Branches"
 	echo "  [Y] Switch Branches"
 	echo "  [M] Merge <-(switch to branch to merge into before using)"
+	echo "  [E] Enter/Switch Directory"
 	echo "  [X] Exit <- (exit back to build Menu)"
 	echo "|------------------------------------------------------------------------------|"
-	echo "| Please Type Your Choice & Press Enter                                        |"
+	echo "  CURRENT REPO : $PWD"
 	echo "|______________________________________________________________________________|"
 
 read menu
@@ -108,9 +117,12 @@ case "$menu" in
 			MERGE_BRANCH
 			REPO_MENU
 	;;
-	"X" | "x" )
+	"E" | "e" )
 		#Restart ./build_kernel.sh
-			./build_kernel.sh
+			ENTER_DIRECTORY
+	;;
+	"X" | "x" )
+		exit
 	;;
 esac
 }
