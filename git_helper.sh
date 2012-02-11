@@ -26,18 +26,17 @@ function REPO_MENU()
 	echo " ______________________________________________________________________________ "
 	echo "| Git Helper Menu                                                              |"
 	echo "|------------------------------------------------------------------------------|"
-	echo "  [G] Global Setup"
-	echo "  [S] Setup a new Repo"
-	echo "  [R] Clone a Repo"
+	echo "  [G] Global Setup/Clone Menu"
 	echo "  [C] Commit Helper Menu"
 	echo "  [B] Branch Helper Menu"
-	echo "  [E] Enter/Switch Repo Directory"
-	echo "  [A] Stash Helper Menu"
+	echo "  [S] Stash Helper Menu"
 	echo "  [P] Patch Helper Menu"
 	echo "  [Z] Build Kernel (try to execute build_kernel.sh)"
-	echo "  [X] Exit <- (exit back to build Menu)"
+	echo "  [R] Switch Repo"
+	echo "  [X] Exit"
 	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
+		REPO=$(basename $PWD)
+	echo "| CURRENT REPO   : $REPO"
 		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
 	echo "|______________________________________________________________________________|"
@@ -46,18 +45,8 @@ read menu
 
 case "$menu" in
 	"G" | "g" )
-		#Global Git Setup
-			GLOBAL_SETUP
-			REPO_MENU
-	;;
-	"S" | "s" )
-		#New Repo Setup
-			NEW_REPO
-			REPO_MENU
-	;;
-	"R" | "r" )
-		#Clone a Repo
-			GIT_CLONE
+		#setup/clone menu
+			SETUP_MENU
 			REPO_MENU
 	;;
 	"C" | "c" )
@@ -70,12 +59,7 @@ case "$menu" in
 			BRANCH_MENU
 			REPO_MENU
 	;;
-	"E" | "e" )
-		#switch repo
-			ENTER_DIRECTORY
-			REPO_MENU
-	;;
-	"A" | "a" )
+	"S" | "s" )
 		#Stash Menu
 			STASH_MENU
 	;;
@@ -86,8 +70,58 @@ case "$menu" in
 	"Z" | "z" )
 		BUILD_KERNEL
 	;;
+	"R" | "r" )
+		#switch repo
+			ENTER_DIRECTORY
+			REPO_MENU
+	;;
 	"X" | "x" )
 		exit
+	;;
+esac
+}
+
+##############################################################
+#			Git Setup Menu			     #
+##############################################################
+
+function SETUP_MENU()
+{
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| Global Setup / Clone Menu                                                    |"
+	echo "|------------------------------------------------------------------------------|"
+	echo "  [G] Global Setup"
+	echo "  [S] Setup a new Repo"
+	echo "  [C] Clone a Repo"
+	echo "  [X] Git Helper Menu"
+	echo "|------------------------------------------------------------------------------|"
+		REPO=$(basename $PWD)
+	echo "| CURRENT REPO   : $REPO"
+		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
+	echo "|______________________________________________________________________________|"
+
+read setup_menu
+
+case "$setup_menu" in
+	"G" | "g" )
+		#Global Git Setup
+			GLOBAL_SETUP
+			SETUP_MENU
+	;;
+	"S" | "s" )
+		#New Repo Setup
+			NEW_REPO
+			SETUP_MENU
+	;;
+	"C" | "C" )
+		#Clone a Repo
+			GIT_CLONE
+			SETUP_MENU
+	;;
+	"X" | "x" )
+		REPO_MENU
 	;;
 esac
 }
@@ -119,6 +153,7 @@ function NEW_REPO()
 		echo "| New Repo Setup                                                               |"
 		echo "|------------------------------------------------------------------------------|"
 		cd ~/
+		echo "  CURRENTLY SESTTING UP REPO IN: $PWD"
 		read -p "  Enter Repo Name : " REPO_NAME
 		mkdir $REPO_NAME
 		cd $REPO_NAME
@@ -139,7 +174,7 @@ function NEW_REPO()
 		ADD_COMMIT
 		ADD_ORIGIN_REMOTE
 		PUSH
-		ENTER_DIRECTORY
+		SETUP_MENU
 }
 #functions (clone a git repository)
 function GIT_CLONE()
@@ -159,60 +194,6 @@ function GIT_CLONE()
 		
 }
 
-#enter directory in which you would like git help
-function ENTER_DIRECTORY()
-{
-	echo	$(tput bold) $(tput setaf 1)
-	echo " ______________________________________________________________________________ "
-	echo "| Please enter name of the repo you would like help with  (folder name)        |"
-	echo "|------------------------------------------------------------------------------|"
-		cd ~/
-		read -p "  ENTER FOLDER NAME : " REPO_DIRECTORY
-		if [ -e $REPO_DIRECTORY ] ; then
-			cd ~/$REPO_DIRECTORY
-		else
-			echo "|------------------------------------------------------------------------------|"
-			echo "|                    File Does Not Exist In Home Directory                     |"
-			echo "|______________________________________________________________________________|"
-			read -p "Press [Enter] key to continue..."
-			ENTER_DIRECTORY
-		fi
-	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
-	echo "|______________________________________________________________________________|"
-}
-
-#try to execute ./build_kernel.sh
-function BUILD_KERNEL()
-{
-	echo	$(tput bold) $(tput setaf 1)
-	echo " ______________________________________________________________________________ "
-	echo "| Please enter name of the repo you would like help with  (folder name)        |"
-	echo "|------------------------------------------------------------------------------|"
-		if [ -e build_kernel.sh ] ; then
-			gnome-terminal -e ./build_kernel.sh
-		else
-			echo "|------------------------------------------------------------------------------|"
-			echo "|                    File Does Not Exist In Repo Directory                     |"
-			echo "|______________________________________________________________________________|"
-			read -p "Press [Enter] key to continue..."
-			echo	$(tput bold) $(tput setaf 1)
-			echo " ______________________________________________________________________________ "
-			echo "| Listing .sh files within repo                                                |"
-			echo "|------------------------------------------------------------------------------|"
-			find ./ -type f -name \*.sh
-			read -p "  Please Type Name Of .sh File you would like to Rename : " SH_FILE
-			mv $SH_FILE build_kernel.sh
-			echo "|------------------------------------------------------------------------------|"
-			echo "|Now Let's Try Again                                                           |"
-			echo "|______________________________________________________________________________|"
-			REPO_MENU
-		fi
-	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
-	echo "|______________________________________________________________________________|"
-}
-
 ##############################################################
 #			Commit Helper Menu		     #
 ##############################################################
@@ -227,9 +208,10 @@ function COMMIT_MENU()
 	echo "  [C] Commit Changes"
 	echo "  [P] Push Changes To Repo"
 	echo "  [E] Enter/Switch Repo Directory"
-	echo "  [X] Exit <- (exit back to build Menu)"
+	echo "  [X] Git Helper Menu"
 	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
+		REPO=$(basename $PWD)
+	echo "| CURRENT REPO   : $REPO"
 		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
 	echo "|______________________________________________________________________________|"
@@ -354,7 +336,8 @@ function BRANCH_MENU()
 	echo "  [E] Enter/Switch Repo Directory"
 	echo "  [X] Git Helper Menu"
 	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
+		REPO=$(basename $PWD)
+	echo "| CURRENT REPO   : $REPO"
 		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
 	echo "|______________________________________________________________________________|"
@@ -538,8 +521,10 @@ function STASH_MENU()
 	echo "  [E] Enter/Switch Repo Directory"
 	echo "  [X] Git Helper Menu"
 	echo "|------------------------------------------------------------------------------|"
+		REPO=$(basename $PWD)
+	echo "| CURRENT REPO   : $REPO"
 		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH"  
 	echo "|______________________________________________________________________________|"
 
 read stash_menu
@@ -614,9 +599,10 @@ function PATCH_MENU()
 	echo "  [E] Enter/Switch Repo Directory"
 	echo "  [X] Git Helper Menu"
 	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
+		REPO=$(basename $PWD)
+	echo "| CURRENT REPO   : $REPO"
 		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-	echo "| CURRENT BRANCH : $CURRENT_BRANCH"  
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
 	echo "|______________________________________________________________________________|"
 
 read patch_menu
@@ -675,7 +661,7 @@ function FORMAT_PATCH()
 	read -p "Press [Enter] key to continue..."
 }
 
-#functions (git stash)
+#functions (patch repo)
 function PATCH_REPO()
 {
 	echo	$(tput bold) $(tput setaf 2)
@@ -689,6 +675,107 @@ function PATCH_REPO()
 	echo "|------------------------------------------------------------------------------|"
 	echo "|______________________________________________________________________________|"
 	read -p "Press [Enter] key to continue..."
+}
+
+##############################################################
+#		   Execute Build_Kernel.sh		     #
+##############################################################
+
+#try to execute ./build_kernel.sh
+function BUILD_KERNEL()
+{
+	echo	$(tput bold) $(tput setaf 1)
+	echo " ______________________________________________________________________________ "
+	echo "| Checking if build_kernel.sh exists                                           |"
+	echo "|------------------------------------------------------------------------------|"
+		if [ -e build_kernel.sh ] ; then
+			gnome-terminal -e "bash -c \"./build_kernel.sh; exec bash\""
+		else
+			echo "|------------------------------------------------------------------------------|"
+			echo "|                    File Does Not Exist In Repo Directory                     |"
+			echo "|______________________________________________________________________________|"
+			read -p "Press [Enter] key to continue..."
+			CHANGE_FILE_NAME
+		fi
+	echo "|------------------------------------------------------------------------------|"
+	echo "| Execution of build_kernel has succeeded...                                   |"
+	echo "|______________________________________________________________________________|"
+	read -p "Press [Enter] key to continue..."
+	REPO_MENU
+	
+}
+
+#try to execute ./build_kernel.sh
+function CHANGE_FILE_NAME()
+{
+			echo	$(tput bold) $(tput setaf 1)
+			echo " ______________________________________________________________________________ "
+			echo "| Listing .sh files within repo                                                |"
+			echo "|------------------------------------------------------------------------------|"
+			find ./ -type f -name \*.sh
+			echo "|------------------------------------------------------------------------------|"
+			echo "|______________________________________________________________________________|"
+			echo	$(tput sgr0) $(tput bold) $(tput setaf 5)
+			echo " ______________________________________________________________________________ "
+			echo "| Would You Like to Rename A .sh File and Try Again                            |"
+			echo "|------------------------------------------------------------------------------|"
+			echo "  [Y] Yes"
+			echo "  [N] NO"
+			echo "|------------------------------------------------------------------------------|"
+			echo "|______________________________________________________________________________|"
+		read change_name
+			case "$change_name" in
+				"Y" | "y" )
+					echo	$(tput sgr0) $(tput bold) $(tput setaf 2)
+					echo " ______________________________________________________________________________ "
+					echo "| Please Input The Name of The .sh File You Would Like To Replace              |"
+					echo "|------------------------------------------------------------------------------|"
+					read -p "  .sh File Name : " SH_FILE
+					mv $SH_FILE build_kernel.sh
+				if [ -e build_kernel.sh ] ; then
+					echo "|------------------------------------------------------------------------------|"
+					echo "|Now Let's Try Again                                                           |"
+					echo "|______________________________________________________________________________|"
+					read -p "Press [Enter] key to continue..."
+					BUILD_KERNEL
+				else
+					CHANGE_FILE_NAME
+				fi
+				;;
+				"N" | "n" )
+					REPO_MENU
+				;;
+			esac
+}
+
+##############################################################
+#		   	Change Repo		  	     #
+##############################################################
+
+#enter directory in which you would like git help
+function ENTER_DIRECTORY()
+{
+	echo	$(tput bold) $(tput setaf 1)
+	echo " ______________________________________________________________________________ "
+	echo "| Please enter name of the repo you would like help with  (folder name)        |"
+	echo "|------------------------------------------------------------------------------|"
+		cd ~/
+		read -p "  ENTER FOLDER NAME : " REPO_DIRECTORY
+		if [ -e $REPO_DIRECTORY ] ; then
+			cd ~/$REPO_DIRECTORY
+		else
+			echo "|------------------------------------------------------------------------------|"
+			echo "|                    File Does Not Exist In Home Directory                     |"
+			echo "|______________________________________________________________________________|"
+			read -p "Press [Enter] key to continue..."
+			ENTER_DIRECTORY
+		fi
+	echo "|------------------------------------------------------------------------------|"
+		REPO=$(basename $PWD)
+	echo "| CURRENT REPO   : $REPO"
+		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
+	echo "|______________________________________________________________________________|"
 }
 
 #main
