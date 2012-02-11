@@ -17,7 +17,9 @@ txtwht=$(tput setaf 7) # White
 txtrst=$(tput sgr0) # Text reset
 txtbld=$(tput bold) #
 
-#functions (git helper menu)
+##############################################################
+#			Git Helper Menu			     #
+##############################################################
 function REPO_MENU()
 {
 	echo	$(tput bold) $(tput setaf 2)
@@ -27,18 +29,17 @@ function REPO_MENU()
 	echo "  [G] Global Setup"
 	echo "  [S] Setup a new Repo"
 	echo "  [R] Clone a Repo"
-	echo "  [F] Add a Files to your repo"
-	echo "  [C] Add a Commit"
-	echo "  [P] Push Commit to Git Repo"
-	echo "  [B] Create a New Branch"
-	echo "  [V] View Branches"
-	echo "  [Y] Switch Branches"
-	echo "  [M] Merge <-(switch to branch to merge into before using)"
+	echo "  [C] Commit Helper Menu"
+	echo "  [B] Branch Helper Menu"
 	echo "  [E] Enter/Switch Repo Directory"
-	echo "  [A] Stash Changes"
+	echo "  [A] Stash Helper Menu"
+	echo "  [P] Patch Helper Menu"
+	echo "  [Z] Build Kernel (try to execute build_kernel.sh)"
 	echo "  [X] Exit <- (exit back to build Menu)"
 	echo "|------------------------------------------------------------------------------|"
 	echo "| CURRENT REPO : $PWD"
+		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
 	echo "|______________________________________________________________________________|"
 
 read menu
@@ -59,52 +60,34 @@ case "$menu" in
 			GIT_CLONE
 			REPO_MENU
 	;;
-	"F" | "f" )
-		#Add a File to your Repo
-			ADD_FILE
-			REPO_MENU
-	;;
 	"C" | "c" )
-		#Commit Files
-			ADD_COMMIT
-			REPO_MENU
-	;;
-	"P" | "p" )
-		#Push Commits to Git Repo
-			PUSH
+		#Commit Menu
+			COMMIT_MENU
 			REPO_MENU
 	;;
 	"B" | "b" )
 		#Create a New Branch & Push Branch
-			BRANCH
-			REPO_MENU
-	;;
-	"V" | "v" )
-		#View Branchs
-			VIEW_BRANCHES
-			REPO_MENU
-	;;
-	"Y" | "y" )
-		#Checkout a branch (will change state of file system)
-			CHECKOUT_BRANCH
-			REPO_MENU
-	;;
-	"M" | "m" )
-		#Merge a Branch
-			MERGE_BRANCH
+			BRANCH_MENU
 			REPO_MENU
 	;;
 	"E" | "e" )
-		#Restart ./build_kernel.sh
+		#switch repo
 			ENTER_DIRECTORY
+			REPO_MENU
 	;;
 	"A" | "a" )
-		#Stash Changes
-			GIT_STASH
+		#Stash Menu
+			STASH_MENU
+	;;
+	"P" | "p" )
+		#patch menu
+			PATCH_MENU
+	;;
+	"Z" | "z" )
+		BUILD_KERNEL
 	;;
 	"X" | "x" )
 		exit
-		./build_kernel.sh
 	;;
 esac
 }
@@ -175,6 +158,111 @@ function GIT_CLONE()
 		ENTER_DIRECTORY
 		
 }
+
+#enter directory in which you would like git help
+function ENTER_DIRECTORY()
+{
+	echo	$(tput bold) $(tput setaf 1)
+	echo " ______________________________________________________________________________ "
+	echo "| Please enter name of the repo you would like help with  (folder name)        |"
+	echo "|------------------------------------------------------------------------------|"
+		cd ~/
+		read -p "  ENTER FOLDER NAME : " REPO_DIRECTORY
+		if [ -e $REPO_DIRECTORY ] ; then
+			cd ~/$REPO_DIRECTORY
+		else
+			echo "|------------------------------------------------------------------------------|"
+			echo "|                    File Does Not Exist In Home Directory                     |"
+			echo "|______________________________________________________________________________|"
+			read -p "Press [Enter] key to continue..."
+			ENTER_DIRECTORY
+		fi
+	echo "|------------------------------------------------------------------------------|"
+	echo "| CURRENT REPO : $PWD"
+	echo "|______________________________________________________________________________|"
+}
+
+#try to execute ./build_kernel.sh
+function BUILD_KERNEL()
+{
+	echo	$(tput bold) $(tput setaf 1)
+	echo " ______________________________________________________________________________ "
+	echo "| Please enter name of the repo you would like help with  (folder name)        |"
+	echo "|------------------------------------------------------------------------------|"
+		if [ -e build_kernel.sh ] ; then
+			gnome-terminal -e ./build_kernel.sh
+		else
+			echo "|------------------------------------------------------------------------------|"
+			echo "|                    File Does Not Exist In Repo Directory                     |"
+			echo "|______________________________________________________________________________|"
+			read -p "Press [Enter] key to continue..."
+			echo	$(tput bold) $(tput setaf 1)
+			echo " ______________________________________________________________________________ "
+			echo "| Listing .sh files within repo                                                |"
+			echo "|------------------------------------------------------------------------------|"
+			find ./ -type f -name \*.sh
+			read -p "  Please Type Name Of .sh File you would like to Rename : " SH_FILE
+			mv $SH_FILE build_kernel.sh
+			echo "|------------------------------------------------------------------------------|"
+			echo "|Now Let's Try Again                                                           |"
+			echo "|______________________________________________________________________________|"
+			REPO_MENU
+		fi
+	echo "|------------------------------------------------------------------------------|"
+	echo "| CURRENT REPO : $PWD"
+	echo "|______________________________________________________________________________|"
+}
+
+##############################################################
+#			Commit Helper Menu		     #
+##############################################################
+
+function COMMIT_MENU()
+{
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| Commit Helper Menu                                                           |"
+	echo "|------------------------------------------------------------------------------|"
+	echo "  [A] Add Files To Repo"
+	echo "  [C] Commit Changes"
+	echo "  [P] Push Changes To Repo"
+	echo "  [E] Enter/Switch Repo Directory"
+	echo "  [X] Exit <- (exit back to build Menu)"
+	echo "|------------------------------------------------------------------------------|"
+	echo "| CURRENT REPO : $PWD"
+		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
+	echo "|______________________________________________________________________________|"
+
+read commit_menu
+
+case "$commit_menu" in
+	"A" | "a" )
+		#add files to repo
+			ADD_FILES
+			COMMIT_MENU
+	;;
+	"C" | "c" )
+		#create a new commit
+			ADD_COMMIT
+			COMMIT_MENU
+	;;
+	"P" | "p" )
+		#push files to repo
+			PUSH
+			COMMIT_MENU
+	;;
+	"E" | "e" )
+		#switch repo
+			ENTER_DIRECTORY
+			COMMIT_MENU
+	;;
+	"X" | "x" )
+		REPO_MENU
+	;;
+esac
+}
+
 #functions (add a file to git repo)
 function ADD_FILE()
 {
@@ -248,6 +336,61 @@ function PUSH()
 		echo "|------------------------------------------------------------------------------|"
 		echo "|______________________________________________________________________________|"
 		read -p "Press [Enter] key to continue..."
+}
+
+##############################################################
+#			Branch Menu			     #
+##############################################################
+function BRANCH_MENU()
+{
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| Branch Helper Menu                                                           |"
+	echo "|------------------------------------------------------------------------------|"
+	echo "  [C] Create a New Branch"
+	echo "  [V] View Branches"
+	echo "  [S] Switch Branches"
+	echo "  [M] Merge Branch"
+	echo "  [E] Enter/Switch Repo Directory"
+	echo "  [X] Git Helper Menu"
+	echo "|------------------------------------------------------------------------------|"
+	echo "| CURRENT REPO : $PWD"
+		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
+	echo "|______________________________________________________________________________|"
+
+read branch_menu
+
+case "$branch_menu" in
+	"B" | "b" )
+		#Create a New Branch & Push Branch
+			BRANCH
+			BRANCH_MENU
+	;;
+	"V" | "v" )
+		#View Branchs
+			VIEW_BRANCHES
+			BRANCH_MENU
+	;;
+	"S" | "s" )
+		#Checkout a branch (will change state of file system)
+			CHECKOUT_BRANCH
+			BRANCH_MENU
+	;;
+	"M" | "m" )
+		#Merge a Branch
+			MERGE_BRANCH
+			BRANCH_MENU
+	;;
+	"E" | "e" )
+		#switch repo
+			ENTER_DIRECTORY
+			BRANCH_MENU
+	;;
+	"X" | "x" )
+			REPO_MENU
+	;;
+esac
 }
 
 #function (create a new branch)
@@ -378,32 +521,12 @@ function MERGE_BRANCH2()
 		esac
 }
 
-#enter directory in which you would like git help
-function ENTER_DIRECTORY()
-{
-	echo	$(tput bold) $(tput setaf 1)
-	echo " ______________________________________________________________________________ "
-	echo "| Please enter name of the repo you would like help with  (folder name)        |"
-	echo "|------------------------------------------------------------------------------|"
-		cd ~/
-		read -p "  ENTER FOLDER NAME : " REPO_DIRECTORY
-		if [ -e $REPO_DIRECTORY ] ; then
-			cd ~/$REPO_DIRECTORY
-		else
-			echo "|------------------------------------------------------------------------------|"
-			echo "|                    File Does Not Exist In Home Directory                     |"
-			echo "|______________________________________________________________________________|"
-			read -p "Press [Enter] key to continue..."
-			ENTER_DIRECTORY
-		fi
-	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
-	echo "|______________________________________________________________________________|"
-	REPO_MENU
-}
+##############################################################
+#			Stash Menu			     #
+##############################################################
 
 #functions (git stash)
-function GIT_STASH()
+function STASH_MENU()
 {
 	echo	$(tput bold) $(tput setaf 2)
 	echo " ______________________________________________________________________________ "
@@ -411,10 +534,12 @@ function GIT_STASH()
 	echo "|------------------------------------------------------------------------------|"
 	echo "  [S] Stash Changes"
 	echo "  [V] View Stashes"
-	echo "  [L] Load Back a Stash"
-	echo "  [X] Exit <- (exit back git helper menu)"
+	echo "  [L] Load a Stash"
+	echo "  [E] Enter/Switch Repo Directory"
+	echo "  [X] Git Helper Menu"
 	echo "|------------------------------------------------------------------------------|"
-	echo "| CURRENT REPO : $PWD"
+		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH" 
 	echo "|______________________________________________________________________________|"
 
 read stash_menu
@@ -463,10 +588,107 @@ case "$stash_menu" in
 		echo "|______________________________________________________________________________|"
 		GIT_STASH
 	;;
+	"E" | "e" )
+		#switch repo
+			ENTER_DIRECTORY
+			STASH_MENU
+	;;
 	"X" | "x" )
 		REPO_MENU
 	;;
 esac
+}
+
+##############################################################
+#			Patch Menu			     #
+##############################################################
+function PATCH_MENU()
+{
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| PATCH Helper Menu                                                            |"
+	echo "|------------------------------------------------------------------------------|"
+	echo "  [V] View Commits"
+	echo "  [C] Create a New Patch"
+	echo "  [P] Patch Repo"
+	echo "  [E] Enter/Switch Repo Directory"
+	echo "  [X] Git Helper Menu"
+	echo "|------------------------------------------------------------------------------|"
+	echo "| CURRENT REPO : $PWD"
+		CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	echo "| CURRENT BRANCH : $CURRENT_BRANCH"  
+	echo "|______________________________________________________________________________|"
+
+read patch_menu
+
+case "$patch_menu" in
+	"V" | "v" )
+		#View Commits
+			VIEW_COMMITS
+			PATCH_MENU
+	;;
+	"C" | "c" )
+		#Create a new patch
+			FORMAT_PATCH
+			PATCH_MENU
+	;;
+	"P" | "p" )
+		#Patch a Repo
+			PATCH_REPO
+			PATCH_MENU
+	;;
+	"E" | "e" )
+		#switch repo
+			ENTER_DIRECTORY
+			PATCH_MENU
+	;;
+	"X" | "x" )
+			REPO_MENU
+	;;
+esac
+}
+#functions (git view commits)
+function VIEW_COMMITS()
+{
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| Viewing Patches                                                              |"
+	echo "|------------------------------------------------------------------------------|"
+	git log
+	echo "|------------------------------------------------------------------------------|"
+	echo "|______________________________________________________________________________|"
+	read -p "Press [Enter] key to continue..."
+}
+
+#functions (create a patch)
+function FORMAT_PATCH()
+{
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| Please Enter first 7 digits of commit ID                                     |"
+	echo "|------------------------------------------------------------------------------|"
+	read -p "  ENTER NUMBER Of COMMITS YOU WOULD LIKE TO GO BACK : " P_NUM
+	read -p "  ENTER COMMIT ID : " COMMIT_ID
+	git format-patch -p$P_NUM $COMMIT_ID
+	echo "|------------------------------------------------------------------------------|"
+	echo "|______________________________________________________________________________|"
+	read -p "Press [Enter] key to continue..."
+}
+
+#functions (git stash)
+function PATCH_REPO()
+{
+	echo	$(tput bold) $(tput setaf 2)
+	echo " ______________________________________________________________________________ "
+	echo "| Showing Patch Files In Repo                                                  |"
+	echo "|------------------------------------------------------------------------------|"
+	find ./ -type f -name \*.patch
+	read -p "  ENTER -p # : " P_NUM
+	read -p "  ENTER PATCH FILE NAME : " PATCH_NAME
+	patch -p$P_NUM < $PATCH_NAME
+	echo "|------------------------------------------------------------------------------|"
+	echo "|______________________________________________________________________________|"
+	read -p "Press [Enter] key to continue..."
 }
 
 #main
