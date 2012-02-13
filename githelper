@@ -518,6 +518,7 @@ function PUSH()
   	echo $bld$cyn"| Pushing Your Changes                                                         |"
   	echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
           git push origin $CURRENT_BRANCH
+        echo $bld$cyn"|------------------------------------------------------------------------------|"
   	echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   	read -p "Press [Enter] key to continue..."
       ;;
