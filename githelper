@@ -7,22 +7,22 @@
 #
 
 # Text color variables <- Adding some color to this script...
-txtgrn=$(tput setaf 1) # RED
-txtgrn=$(tput setaf 2) # Green
-txtylw=$(tput setaf 3) # Yellow
-txtblu=$(tput setaf 4) # Blue
-txtpur=$(tput setaf 5) # Purple
-txtcyn=$(tput setaf 6) # Cyan
-txtwht=$(tput setaf 7) # White
-txtrst=$(tput sgr0) # Text reset
-txtbld=$(tput bold) #
+red=$(tput setaf 1) # RED
+grn=$(tput setaf 2) # Green
+ylw=$(tput setaf 3) # Yellow
+blu=$(tput setaf 4) # Blue
+pur=$(tput setaf 5) # Purple
+cyn=$(tput setaf 6) # Cyan
+wht=$(tput setaf 7) # White
+rst=$(tput sgr0) # Text reset
+bld=$(tput bold) #
 
 ##############################################################
 #			Terminal Title			     #
 ##############################################################
 function TITLE() 
 {
-	echo -en "\033]2;Git_Helper\007"
+	echo -en "\033]2;IAP_Git_Helper\007"
 }
 
 ##############################################################
@@ -30,72 +30,145 @@ function TITLE()
 ##############################################################
 function REPO_MENU()
 {
-  echo $(tput bold)
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 6)"| Git Helper Menu                                                              |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [G] Global Setup/Clone Menu                                                 |"
-  echo $(tput setaf 2)"|  [C] Commit Helper Menu                                                      |"
-  echo $(tput setaf 2)"|  [B] Branch Helper Menu                                                      |"
-  echo $(tput setaf 2)"|  [S] Stash Helper Menu                                                       |"
-  echo $(tput setaf 2)"|  [P] Patch Helper Menu                                                       |"
-  echo $(tput setaf 2)"|  [V] View/Switch Repo                                                        |"
-  echo $(tput setaf 6)"|-Build-Helper-Menu------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [1] Setup Build Environment (installs build packages)                       |"
-  echo $(tput setaf 2)"|  [2] Auto Clone Samurai Kernel Repo                                          |"
-  echo $(tput setaf 2)"|  [3] Build Kernel (try to execute build_kernel.sh)                           |"
-  echo $(tput setaf 6)"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
-  echo $(tput setaf 2)"|  [I] ReInstall Git Helper                                                    |"
-  echo $(tput setaf 2)"|  [U] UnInstall Git Helper                                                    |"
-  echo $(tput setaf 2)"|  [X] Exit                                                                    |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
+    echo $bld$cyn" ______________________________________________________________________________ "
+    echo $bld$cyn"| Git Helper Menu                                                              |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"|  [G] Global Setup/Clone Menu                                                 |"
+    echo $bld$grn"|  [C] Commit Helper Menu                                                      |"
+    echo $bld$grn"|  [B] Branch Helper Menu                                                      |"
+    echo $bld$grn"|  [S] Stash Helper Menu                                                       |"
+    echo $bld$grn"|  [P] Patch Helper Menu                                                       |"
+    echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+    echo $bld$cyn"|-Build-Helper-Menu------------------------------------------------------------|"
+    echo $bld$grn"|  [1] Setup Build Environment (installs build packages)                       |"
+    echo $bld$grn"|  [2] Auto Clone Samurai Kernel Repo                                          |"
+    echo $bld$grn"|  [3] Build Kernel (try to execute build_kernel.sh)                           |"
+    echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
+    echo $bld$grn"|  [I] ReInstall Git Helper                                                    |"
+    echo $bld$grn"|  [U] UnInstall Git Helper                                                    |"
+    echo $bld$grn"|  [X] Exit                                                                    |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"| WORKING DIR    : $PWD" 
     REPO=$(basename $PWD)
-    echo $(tput setaf 2)"| CURRENT REPO   : $REPO"
+    echo $bld$grn"| CURRENT REPO   : $REPO"
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    echo $(tput setaf 2)"| CURRENT BRANCH : $CURRENT_BRANCH" 
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+  read menu
+    case "$menu" in
+      "G" | "g" )
+      #global setup/clone menu
+          SETUP_MENU
+          echo $bld$rst
+          REPO_MENU
+      ;;
+      "C" | "c" )
+      #commit helper menu
+        COMMIT_MENU
+        echo $bld$rst
+        REPO_MENU
+      ;;
+      "B" | "b" )
+      #branch helper menu
+        BRANCH_MENU
+        echo $bld$rst
+        REPO_MENU
+      ;;
+      "S" | "s" )
+      #Stash helper menu
+        STASH_MENU
+        echo $bld$rst
+        REPO_MENU
+      ;;
+      "P" | "p" )
+      #patch helper menu
+        PATCH_MENU
+        echo $bld$rst
+        REPO_MENU
+      ;;
+      "V" | "v" )
+      #view/switch repo
+        ENTER_DIRECTORY
+        echo $bld$rst
+        REPO_MENU
+      ;;
+##############################################################
+#			Menu Divider			     #
+##############################################################
+      "1" )
+      #setup build environment
+        SETUP_BUILD
+        echo $bld$rst
+        REPO_MENU
+      ;;
+      "2" )
+      #auto clone samurai repo
+        CLONE_SAMURAI
+        echo $bld$rst
+        REPO_MENU
+      ;;
+      "3" )
+      #build Kernel
+        BUILD_KERNEL
+        echo $bld$rst
+        REPO_MENU
+      ;;
+##############################################################
+#			Menu Divider			     #
+##############################################################
+      "I" | "i" )
+      #install git helper
+        HELPER_INSTALL
+        echo $bld$rst
+        REPO_MENU
+      ;;
+      "U" | "u" )
+      #uninstall git helper
+        UNINSTALL_HELPER
+        echo $bld$rst   
+      ;;
+      "X" | "x" )
+        echo $rst
+        exit
+      ;;
+      * )
+        echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+        REPO_MENU
+      ;;
+    esac
   else
-    echo $(tput setaf 2)"| Current Directory is Not A Repo (press [V] to view current repos in home dir)|"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$cyn" ______________________________________________________________________________ "
+    echo $red$cyn"| Limited Git Helper Menu <-(please use [V], select a Repo to unlock options)  |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"|  [G] Global Setup/Clone Menu                                                 |"
+    echo $rst$grn"|  [C] Commit Helper Menu                                                      |"
+    echo $rst$grn"|  [B] Branch Helper Menu                                                      |"
+    echo $rst$grn"|  [S] Stash Helper Menu                                                       |"
+    echo $rst$grn"|  [P] Patch Helper Menu                                                       |"
+    echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+    echo $bld$cyn"|-Build-Helper-Menu------------------------------------------------------------|"
+    echo $bld$grn"|  [1] Setup Build Environment (installs build packages)                       |"
+    echo $bld$grn"|  [2] Auto Clone Samurai Kernel Repo                                          |"
+    echo $bld$grn"|  [3] Build Kernel (try to execute build_kernel.sh)                           |"
+    echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
+    echo $bld$grn"|  [I] ReInstall Git Helper                                                    |"
+    echo $bld$grn"|  [U] UnInstall Git Helper                                                    |"
+    echo $bld$grn"|  [X] Exit                                                                    |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   fi
   read menu
   case "$menu" in
     "G" | "g" )
     #global setup/clone menu
-        SETUP_MENU
-        echo $(tput sgr0)
-        REPO_MENU
-    ;;
-    "C" | "c" )
-    #commit helper menu
-      COMMIT_MENU
-      echo $(tput sgr0)
-      REPO_MENU
-    ;;
-    "B" | "b" )
-    #branch helper menu
-      BRANCH_MENU
-      echo $(tput sgr0)
-      REPO_MENU
-    ;;
-    "S" | "s" )
-    #Stash helper menu
-      STASH_MENU
-      echo $(tput sgr0)
-      REPO_MENU
-    ;;
-    "P" | "p" )
-    #patch helper menu
-      PATCH_MENU
-      echo $(tput sgr0)
+      SETUP_MENU
+      echo $bld$rst
       REPO_MENU
     ;;
     "V" | "v" )
     #view/switch repo
       ENTER_DIRECTORY
-      echo $(tput sgr0)
+      echo $bld$rst
       REPO_MENU
     ;;
 ##############################################################
@@ -104,19 +177,19 @@ function REPO_MENU()
     "1" )
     #setup build environment
       SETUP_BUILD
-      echo $(tput sgr0)
+      echo $bld$rst
       REPO_MENU
     ;;
     "2" )
     #auto clone samurai repo
       CLONE_SAMURAI
-      echo $(tput sgr0)
+      echo $bld$rst
       REPO_MENU
     ;;
     "3" )
     #build Kernel
       BUILD_KERNEL
-      echo $(tput sgr0)
+      echo $bld$rst
       REPO_MENU
     ;;
 ##############################################################
@@ -125,17 +198,21 @@ function REPO_MENU()
     "I" | "i" )
     #install git helper
       HELPER_INSTALL
-      echo $(tput sgr0)
+      echo $bld$rst
       REPO_MENU
     ;;
     "U" | "u" )
     #uninstall git helper
       UNINSTALL_HELPER
-      echo $(tput sgr0)   
+      echo $bld$rst   
     ;;
     "X" | "x" )
-      echo $(tput sgr0)
+      echo $bld$rst
       exit
+    ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      REPO_MENU
     ;;
   esac
 }
@@ -146,27 +223,26 @@ function REPO_MENU()
 
 function SETUP_MENU()
 {
-  echo $(tput sgr0) $(tput bold)
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Global Setup / Clone Menu                                                    |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [G] Global Setup                                                            |"
-  echo $(tput setaf 2)"|  [S] Setup a new Repo                                                        |"
-  echo $(tput setaf 2)"|  [C] Clone a Repo                                                            |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [V] View/Switch Repo                                                        |"
-  echo $(tput setaf 2)"|  [X] Git Helper Menu                                                         |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| WORKING DIR    : $PWD"  
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Global Setup / Clone Menu                                                    |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [G] Global Setup                                                            |"
+  echo $bld$grn"|  [S] Setup a new Repo                                                        |"
+  echo $bld$grn"|  [C] Clone a Repo                                                            |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| WORKING DIR    : $PWD"  
     if [ -e .git ] ; then
       REPO=$(basename $PWD)
-      echo $(tput setaf 2)"| CURRENT REPO   : $REPO"
+      echo $bld$grn"| CURRENT REPO   : $REPO"
       CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-      echo $(tput setaf 2)"| CURRENT BRANCH : $CURRENT_BRANCH" 
-      echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+      echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     else
-      echo $(tput setaf 2)"| Current Directory is Not A Repo (press [V] to view current repos in home dir)|"
-      echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+      echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     fi
     read setup_menu
     case "$setup_menu" in
@@ -180,7 +256,7 @@ function SETUP_MENU()
         NEW_REPO
         SETUP_MENU
       ;;
-      "C" | "C" )
+      "C" | "c" )
       #Clone a Repo
         GIT_CLONE
         SETUP_MENU
@@ -192,46 +268,50 @@ function SETUP_MENU()
       ;;
       "X" | "x" )
       ;;
+      * )
+        echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+        SETUP_MENU
+      ;;
   esac
 }
 
 function GLOBAL_SETUP()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Git Global Setup                                                             |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Git Global Setup                                                             |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  Enter Your Name : " USER_NAME
   git config --global user.name $USER_NAME
   read -p "  Enter Your Email Address : " EMAIL_ADDRESS
   git config --global user.email $EMAIL_ADDRESS
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| Global Settings Have Been Set                                                |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| Global Settings Have Been Set                                                |"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
 function NEW_REPO()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| New Repo Setup                                                               |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| New Repo Setup                                                               |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   cd ~/
   echo "  CURRENTLY SESTTING UP REPO IN: $PWD"
   read -p "  Enter Repo Name : " REPO_NAME
   mkdir $REPO_NAME
   cd $REPO_NAME
   git init
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| Repo Directory Has Been Setup In Your Home Directory                         |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| Repo Directory Has Been Setup In Your Home Directory                         |"
+  echo $bld$cyn"|______________________________________________________________________________|"
   echo
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"|          *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*             |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|               When you are finished press enter to continue                  |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|          *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*             |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"|          *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*             |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|               When you are finished press enter to continue                  |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|          *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*             |"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
   ADD_FILE
   ADD_COMMIT
@@ -242,15 +322,15 @@ function NEW_REPO()
 
 function GIT_CLONE()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Clone a Repo                                                                 |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Clone a Repo                                                                 |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   cd ~/
   echo "  CURRENTLY CLONING INTO: $PWD"
   read -p "  Enter Forked Repo Address : " REPO_ADDRESS
   git clone $REPO_ADDRESS
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
   ENTER_DIRECTORY	
 }  
@@ -261,27 +341,29 @@ function GIT_CLONE()
 
 function COMMIT_MENU()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 6)"| Commit Helper Menu                                                           |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [A] Add Files To Repo                                                       |"
-  echo $(tput setaf 2)"|  [R] Remove Files From Repo                                                  |"
-  echo $(tput setaf 2)"|  [C] Commit Changes                                                          |"
-  echo $(tput setaf 2)"|  [P] Push Changes To Repo                                                    |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [V] View/Switch Repo                                                        |"
-  echo $(tput setaf 2)"|  [X] Git Helper Menu                                                         |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| WORKING DIR    : $PWD" 
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Commit Helper Menu                                                           |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [A] Add Files To Repo                                                       |"
+  echo $bld$grn"|  [R] Remove Files From Repo                                                  |"
+  echo $bld$grn"|  [C] Commit Changes                                                          |"
+  echo $bld$grn"|  [P] Push Changes To Repo                                                    |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
     REPO=$(basename $PWD)
-    echo $(tput setaf 2)"| CURRENT REPO   : $REPO"
+    echo $bld$grn"| CURRENT REPO   : $REPO"
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-      echo $(tput setaf 2)"| CURRENT BRANCH : $CURRENT_BRANCH" 
-      echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+      echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   else
-      echo $(tput setaf 2)"| Current Directory is Not A Repo (press [V] to view current repos in home dir)|"
-      echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+      echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+      read -p "Press [Enter] key to continue..."
+      REPO_MENU
   fi
   read commit_menu
   case "$commit_menu" in
@@ -317,97 +399,141 @@ function COMMIT_MENU()
     ;;
     "X" | "x" )
     ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      COMMIT_MENU
+    ;;
   esac
 }
 
 function ADD_FILES()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Would You Like to Add a File to your Repo                                    |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [Y] Yes                                                                     |"
-  echo $(tput setaf 1)"|  [N] NO                                                                      |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Would You Like to Add a File to your Repo                                    |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [Y] Yes                                                                     |"
+  echo $bld$red"|  [N] NO                                                                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read add_file
   case "$add_file" in
     "Y" | "y" )
-      echo $(tput setaf 6)" ______________________________________________________________________________ "
-      echo $(tput setaf 2)"| Please Input dir if it is not located in repo                                |"
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$cyn"| Please Input dir if it is not located in repo                                |"
+      echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
       read -p "  Enter File Name : " FILE_NAME
       git add $FILE_NAME
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-      echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+      echo $bld$cyn"|------------------------------------------------------------------------------|"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
       read -p "Press [Enter] key to continue..."
       ADD_FILES
     ;;
     "N" | "n" )
+    ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      ADD_FILES
     ;;
   esac
 }
 
 function REMOVE_FILES()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Would You Like to Remove a File from your Repo                               |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [Y] Yes                                                                     |"
-  echo $(tput setaf 1)"|  [N] NO                                                                      |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Would You Like to Remove a File from your Repo                               |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [Y] Yes                                                                     |"
+  echo $bld$red"|  [N] NO                                                                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read remove_file
   case "$remove_file" in
     "Y" | "y" )
-      echo $(tput setaf 6)" ______________________________________________________________________________ "
-      echo $(tput setaf 2)"| Please Input dir if it is not located in repo                                |"
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$cyn"| Please Input dir if it is not located in repo                                |"
+      echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
       read -p "  Enter File Name : " FILE_NAME
       git rm $FILE_NAME
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-      echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+      echo $bld$cyn"|------------------------------------------------------------------------------|"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
       read -p "Press [Enter] key to continue..."
       REMOVE_FILES
     ;;
     "N" | "n" )
+    ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      REMOVE_FILES
     ;;
   esac
 }
 
 function ADD_COMMIT()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Please Input your commit message(use _ instead of spaces)                    |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Please Input your commit message(use _ instead of spaces)                    |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  Enter Commit Message : " COMMIT_MESSAGE
   git commit -a -m $COMMIT_MESSAGE
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
 function ADD_ORIGIN_REMOTE()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Please Enter Your Origin Remote Address                                      |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Please Enter Your Origin Remote Address                                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  Enter Remote Address : " REMOTE_ORIGIN
   git remote add origin $REMOTE_ORIGIN
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
 function PUSH()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Push Your Changes to your Repo (master = main repo)                          |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
-  read -p "  Enter Branch Name : " BRANCH_NAME
-  git push origin $BRANCH_NAME
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
-  read -p "Press [Enter] key to continue..."
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Push Your Changes to your Repo (master = main repo)                          |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+  if [ -e .git ] ; then
+    REPO=$(basename $PWD)
+    echo $bld$grn"| CURRENT REPO   : $REPO"
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH <-branch you are pushing to" 
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+
+    echo $bld$cyn" ______________________________________________________________________________ "
+    echo $bld$cyn"| Would You Still Like Push Your Files                                         |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"|  [Y] Yes                                                                     |"
+    echo $bld$red"|  [N] NO                                                                      |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    read change_name
+    case "$change_name" in
+      "Y" | "y" )
+  	echo $bld$cyn" ______________________________________________________________________________ "
+  	echo $bld$cyn"| Pushing Your Changes                                                         |"
+  	echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+          git push origin $CURRENT_BRANCH
+  	echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+  	read -p "Press [Enter] key to continue..."
+      ;;
+      "N" | "n" )
+      ;;
+      * )
+        echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+        PUSH
+      ;;
+    esac
+  else
+    echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    read -p "Press [Enter] key to continue..."
+    REPO_MENU
+  fi
 }
 
 ##############################################################
@@ -415,27 +541,29 @@ function PUSH()
 ##############################################################
 function BRANCH_MENU()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 6)"| Branch Helper Menu                                                           |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [C] Create a New Branch                                                     |"
-  echo $(tput setaf 2)"|  [V] View Branches                                                           |"
-  echo $(tput setaf 2)"|  [S] Switch Branches                                                         |"
-  echo $(tput setaf 2)"|  [M] Merge Branch                                                            |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [V] View/Switch Repo                                                        |"
-  echo $(tput setaf 2)"|  [X] Git Helper Menu                                                         |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| WORKING DIR    : $PWD" 
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Branch Helper Menu                                                           |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [C] Create a New Branch                                                     |"
+  echo $bld$grn"|  [E] View Branches                                                           |"
+  echo $bld$grn"|  [S] Switch Branches                                                         |"
+  echo $bld$grn"|  [M] Merge Branch                                                            |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
     REPO=$(basename $PWD)
-    echo $(tput setaf 2)"| CURRENT REPO   : $REPO"
+    echo $bld$grn"| CURRENT REPO   : $REPO"
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    echo $(tput setaf 2)"| CURRENT BRANCH : $CURRENT_BRANCH" 
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   else
-    echo $(tput setaf 2)"| Current Directory is Not A Repo (press [V] to view current repos in home dir)|"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    read -p "Press [Enter] key to continue..."
+    REPO_MENU
   fi
   read branch_menu
   case "$branch_menu" in
@@ -444,7 +572,7 @@ function BRANCH_MENU()
       BRANCH
       BRANCH_MENU
     ;;
-    "V" | "v" )
+    "E" | "e" )
     #View Branchs
       VIEW_BRANCHES
       BRANCH_MENU
@@ -466,121 +594,123 @@ function BRANCH_MENU()
     ;;
     "X" | "x" )
     ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      BRANCH_MENU
+    ;;
   esac
 }
 
 function BRANCH()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Create a Branch                                                              |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Create a Branch                                                              |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  Enter Branch Name : " BRANCH_NAME
   git branch $BRANCH_NAME
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
   PUSH
 }
 
 function VIEW_BRANCHES()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| View Branches                                                                |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| View Branches                                                                |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   git branch
-  tput sgr0
-  tput bold
-  tput setaf 6
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
 function CHECKOUT_BRANCH()
 {
   VIEW_BRANCHES
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Switch to a Branch                                                           |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Switch to a Branch                                                           |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  Enter Branch Name : " BRANCH_NAME
   git checkout $BRANCH_NAME
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
 function MERGE_BRANCH()
 {
   VIEW_BRANCHES
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Please Enter Branch Names                                                    |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Please Enter Branch Names                                                    |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  Enter Branch You Would Like To Merge Into : " INTO_BRANCH
   git checkout $INTO_BRANCH
   read -p "  Enter Branch Name That Is Being Merged : " MERGE_BRANCH
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Review Of Changes Before Merging                                             |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Review Of Changes Before Merging                                             |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   git diff $INTO_BRANCH $MERGE_BRANCH
   git branch
-  tput sgr0
-  tput bold
-  tput setaf 6
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Merge Branch                                                                 |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Merge Branch                                                                 |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   git merge $MERGE_BRANCH
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
   MERGE_BRANCH2
 }
 
 function MERGE_BRANCH2()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| If there were errors Choose [D] After Fixing Choose [C]                      |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [D] Show Conflicts <-(fix if needed)                                        |"
-  echo $(tput setaf 2)"|  [C] Commit/Review/Push                                                      |"
-  echo $(tput setaf 2)"|  [X] Choose If There Were No Errors                                          |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| If there were errors Choose [D] After Fixing Choose [C]                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [D] Show Conflicts <-(fix if needed)                                        |"
+  echo $bld$grn"|  [C] Commit/Review/Push                                                      |"
+  echo $bld$grn"|  [X] Choose If There Were No Errors                                          |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read diff
   case "$diff" in
     "D" | "d" )	
-      echo $(tput setaf 6)" ______________________________________________________________________________ "
-      echo $(tput setaf 2)"| Please Fix These Before Commiting                                            |"
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$cyn"| Please Fix These Before Commiting                                            |"
+      echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
       git diff
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-      echo $(tput setaf 6)"|______________________________________________________________________________|"
-      echo $(tput setaf 6)" ______________________________________________________________________________ "
-      echo $(tput setaf 2)"|                 *PLEASE FIX DIFF FILES BEFORE CONTINUING*                    |"
-      echo $(tput setaf 6)"|******************************************************************************|"
-      echo $(tput setaf 2)"|              When you are finished press enter to continue                   |"
-      echo $(tput setaf 6)"|******************************************************************************|"
-      echo $(tput setaf 2)"|                 *PLEASE FIX DIFF FILES BEFORE CONTINUING*                    |"
-      echo $(tput setaf 6)"|______________________________________________________________________________|"
+      echo $bld$cyn"|------------------------------------------------------------------------------|"
+      echo $bld$cyn"|______________________________________________________________________________|"
+      echo $bld$red" ______________________________________________________________________________ "
+      echo $bld$red"|                 *PLEASE FIX DIFF FILES BEFORE CONTINUING*                    |"
+      echo $bld$red"|******************************************************************************|"
+      echo $bld$red"|              When you are finished press enter to continue                   |"
+      echo $bld$red"|******************************************************************************|"
+      echo $bld$red"|                 *PLEASE FIX DIFF FILES BEFORE CONTINUING*                    |"
+      echo $bld$red"|______________________________________________________________________________|"$bld$grn
       read -p "Press [Enter] key to continue..."
       MERGE_BRANCH2
     ;;
     "C" | "c" )
       ADD_COMMIT
-      echo $(tput setaf 6)" ______________________________________________________________________________ "
-      echo $(tput setaf 2)"|               *Showing Graphical Representation of History*                  |"
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$cyn"|               *Showing Graphical Representation of History*                  |"
+      echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
       gitk
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-      echo $(tput setaf 6)"|______________________________________________________________________________|"
+      echo $bld$cyn"|------------------------------------------------------------------------------|"
+      echo $bld$cyn"|______________________________________________________________________________|"
       read -p "Press [Enter] key to continue..."
       PUSH
     ;;
     "X" | "x" )
+    ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      MERGE_BRANCH2
     ;;
   esac
 }
@@ -592,26 +722,28 @@ function MERGE_BRANCH2()
 #functions (git stash)
 function STASH_MENU()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 6)"| Git Stash Menu                                                               |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [S] Stash Changes                                                           |"
-  echo $(tput setaf 2)"|  [V] View Stash                                                              |"
-  echo $(tput setaf 2)"|  [L] Load a Stash                                                            |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [V] View/Switch Repo                                                        |"
-  echo $(tput setaf 2)"|  [X] Git Helper Menu                                                         |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| WORKING DIR    : $PWD" 
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Git Stash Menu                                                               |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [S] Stash Changes                                                           |"
+  echo $bld$grn"|  [E] View Stash                                                              |"
+  echo $bld$grn"|  [L] Load a Stash                                                            |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
     REPO=$(basename $PWD)
-    echo $(tput setaf 2)"| CURRENT REPO   : $REPO"
+    echo $bld$grn"| CURRENT REPO   : $REPO"
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    echo $(tput setaf 2)"| CURRENT BRANCH : $CURRENT_BRANCH" 
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   else
-    echo $(tput setaf 2)"| Current Directory is Not A Repo (press [V] to view current repos in home dir)|"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    read -p "Press [Enter] key to continue..."
+    REPO_MENU
   fi
   read stash_menu
   case "$stash_menu" in
@@ -620,7 +752,7 @@ function STASH_MENU()
       STASH_CHANGES
       STASH_MENU
     ;;
-    "V" | "v" )
+    "E" | "e" )
     #view stash
       VIEW_STASH
       STASH_MENU
@@ -641,49 +773,47 @@ function STASH_MENU()
     ;;
     "X" | "x" )
     ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      STASH_MENU
+    ;;
   esac
 }
 
 function STASH_CHANGES()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Stash Changes for later                                                      |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Stash Changes for later                                                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  Enter Message for Reminder : " STASH_MESSAGE
   git stash save $STASH_MESSAGE
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| Changes Have Been Stashed For Later Use                                      |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| Changes Have Been Stashed For Later Use                                      |"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 	
 function VIEW_STASH()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Viewing Stash List (press Q to exit)                                         |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Viewing Stash List (press Q to exit)                                         |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   git stash list
-  tput sgr0
-  tput bold
-  tput setaf 6
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 	
 function LOAD_STASH()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Please Enter Which Stash You Would Like To Load                              |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Please Enter Which Stash You Would Like To Load                              |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  Enter Stash Number : " STASH_MESSAGE
   git stash apply stash@{$STASH_NUMBER}
-  tput sgr0
-  tput bold
-  tput setaf 6
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| Stash Has Been Reloaded                                                      |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| Stash Has Been Reloaded                                                      |"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
@@ -692,30 +822,32 @@ function LOAD_STASH()
 ##############################################################
 function PATCH_MENU()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 6)"| PATCH Helper Menu                                                            |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [V] View Commits                                                            |"
-  echo $(tput setaf 2)"|  [C] Create a New Patch                                                      |"
-  echo $(tput setaf 2)"|  [P] Patch Repo                                                              |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [V] View/Switch Repo                                                        |"
-  echo $(tput setaf 2)"|  [X] Git Helper Menu                                                         |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| WORKING DIR    : $PWD" 
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| PATCH Helper Menu                                                            |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [E] View Commits                                                            |"
+  echo $bld$grn"|  [C] Create a New Patch                                                      |"
+  echo $bld$grn"|  [P] Patch Repo                                                              |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
     REPO=$(basename $PWD)
-    echo $(tput setaf 2)"| CURRENT REPO   : $REPO"
+    echo $bld$grn"| CURRENT REPO   : $REPO"
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    echo $(tput setaf 2)"| CURRENT BRANCH : $CURRENT_BRANCH" 
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   else
-    echo $(tput setaf 2)"| Current Directory is Not A Repo (press [V] to view current repos in home dir)|"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    read -p "Press [Enter] key to continue..."
+    REPO_MENU
   fi
   read patch_menu
   case "$patch_menu" in
-    "V" | "v" )
+    "E" | "e" )
     #View Commits
       VIEW_COMMITS
       PATCH_MENU
@@ -737,48 +869,50 @@ function PATCH_MENU()
     ;;
     "X" | "x" )
     ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      PATCH_MENU
+    ;;
   esac
 }
 #functions (git view commits)
 function VIEW_COMMITS()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Viewing Patches                                                              |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Viewing Patches                                                              |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   git log
-  tput bold
-  tput setaf 6
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
 #functions (create a patch)
 function FORMAT_PATCH()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Please Enter first 7 digits of commit ID                                     |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Please Enter first 7 digits of commit ID                                     |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  ENTER NUMBER Of COMMITS YOU WOULD LIKE TO GO BACK : " P_NUM
   read -p "  ENTER COMMIT ID : " COMMIT_ID
   git format-patch -p$P_NUM $COMMIT_ID
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
 #functions (patch repo)
 function PATCH_REPO()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Showing Patch Files In Repo                                                  |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Showing Patch Files In Repo                                                  |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   find ./ -type f -name \*.patch
   read -p "  ENTER -p # : " P_NUM
   read -p "  ENTER PATCH FILE NAME : " PATCH_NAME
   patch -p$P_NUM < $PATCH_NAME
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
@@ -789,37 +923,38 @@ function PATCH_REPO()
 #enter directory in which you would like git help
 function ENTER_DIRECTORY()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Searching for git Repo's in Home Directory                                   |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Searching for git Repo's in Home Directory                                   |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   cd ~/
   find -mindepth 2 -maxdepth 2 -name '*.git'
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| Please enter name of the repo you would like to Work On                      |"
-  echo $(tput setaf 2)"| (only the folder name between ./ and /.git from the list above               |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| Please enter name of the repo you would like to Work On                      |"
+  echo $bld$grn"| (only the folder name between ./ and /.git from the list above               |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   read -p "  ENTER FOLDER NAME : " REPO_DIRECTORY
   if [ -e $REPO_DIRECTORY ] ; then
     cd ~/$REPO_DIRECTORY
   else
-    echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-    echo $(tput setaf 2)"|                    File Does Not Exist In Home Directory                     |"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"|                    File Does Not Exist In Home Directory                     |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read -p "Press [Enter] key to continue..."
     ENTER_DIRECTORY
   fi
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| WORKING DIR    : $PWD" 
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
     REPO=$(basename $PWD)
-    echo $(tput setaf 2)"| CURRENT REPO   : $REPO"
+    echo $bld$grn"| CURRENT REPO   : $REPO"
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    echo $(tput setaf 2)"| CURRENT BRANCH : $CURRENT_BRANCH" 
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   else
-    echo $(tput setaf 2)"| Current Directory is Not A Repo (press [V] to view current repos in home dir)|"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read -p "Press [Enter] key to continue..."
+    REPO_MENU
   fi
 }
 
@@ -829,25 +964,24 @@ function ENTER_DIRECTORY()
 
 function CLONE_SAMURAI()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Cloning Samurai Repo                                                         |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Cloning Samurai Repo                                                         |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   cd ~/
   git clone git@github.com:iapearthbound/git_helper.git
   cd ~/git_helper
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| WORKING DIR    : $PWD" 
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
     REPO=$(basename $PWD)
-    echo $(tput setaf 2)"| CURRENT REPO   : $REPO"
+    echo $bld$grn"| CURRENT REPO   : $REPO"
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    echo $(tput setaf 2)"| CURRENT BRANCH : $CURRENT_BRANCH" 
-    echo $(tput setaf 6)"|______________________________________________________________________________|"
+    echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+    echo $bld$cyn"|______________________________________________________________________________|"
     read -p "Press [Enter] key to continue..."
   else
-    echo $(tput setaf 2)"| Current Directory is Not A Repo (press [V] to view current repos in home dir)|"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"
-    read -p "Press [Enter] key to continue..."
+    echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   fi
 }
 
@@ -855,56 +989,54 @@ function CLONE_SAMURAI()
 #		   Execute Build_Kernel.sh		     #
 ##############################################################
 
-#try to execute ./build_kernel.sh
 function BUILD_KERNEL()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Checking if build_kernel.sh exists                                           |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Checking if build_kernel.sh exists                                           |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   if [ -e build_kernel.sh ] ; then
     gnome-terminal -e "bash -c \"./build_kernel.sh; exec bash\""
   else
-    echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-    echo $(tput setaf 2)"|                    File Does Not Exist In Repo Directory                     |"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"|                    File Does Not Exist In Repo Directory                     |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read -p "Press [Enter] key to continue..."
     CHANGE_FILE_NAME
   fi
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"| Execution of build_kernel has succeeded...                                   |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"| Execution of build_kernel has succeeded...                                   |"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
   REPO_MENU	
 }
 
-#try to execute ./build_kernel.sh
 function CHANGE_FILE_NAME()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Listing .sh files within repo                                                |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Listing .sh files within repo                                                |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   find ./ -type f -name \*.sh
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Would You Like to Rename A .sh File and Try Again                            |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [Y] Yes                                                                     |"
-  echo $(tput setaf 1)"|  [N] NO                                                                      |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Would You Like to Rename A .sh File and Try Again                            |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [Y] Yes                                                                     |"
+  echo $bld$red"|  [N] NO                                                                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read change_name
   case "$change_name" in
     "Y" | "y" )
-      echo $(tput setaf 6)" ______________________________________________________________________________ "
-      echo $(tput setaf 2)"| Please Input The Name of The .sh File You Would Like To Replace              |"
-      echo $(tput setaf 6)"|------------------------------------------------------------------------------|"$(tput setaf 2)
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$cyn"| Please Input The Name of The .sh File You Would Like To Replace              |"
+      echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
       read -p "  .sh File Name : " SH_FILE
       mv $SH_FILE build_kernel.sh
       if [ -e build_kernel.sh ] ; then
-        echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-        echo $(tput setaf 2)"|Now Let's Try Again                                                           |"
-        echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+        echo $bld$cyn"|------------------------------------------------------------------------------|"
+        echo $bld$grn"|Now Let's Try Again                                                           |"
+        echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
         read -p "Press [Enter] key to continue..."
         BUILD_KERNEL
       else
@@ -912,6 +1044,10 @@ function CHANGE_FILE_NAME()
       fi
     ;;
     "N" | "n" )
+    ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      CHANGE_FILE_NAME
     ;;
   esac
 }
@@ -922,58 +1058,58 @@ function CHANGE_FILE_NAME()
 
 function SETUP_BUILD()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Setting Up Build Environment                                                 |"
-  echo $(tput setaf 6)"|                                                                              |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Setting Up Build Environment                                                 |"
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$cyn"|______________________________________________________________________________|"
   echo
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Adding Source to APT                                                         |"
-  echo $(tput setaf 6)"|                                                                              |"
-  echo $(tput setaf 6)"|******************************************************************************|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Adding Source to APT                                                         |"
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$cyn"|******************************************************************************|"$bld$grn
   if grep "deb http://archive.canonical.com/ lucid partner" /etc/apt/sources.list ; then
-    echo $(tput setaf 6)"|******************************************************************************|"
-    echo $(tput setaf 2)"|                          SOURCE ALREADY EXISTS                               |"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$cyn"|******************************************************************************|"
+    echo $bld$grn"|                          SOURCE ALREADY EXISTS                               |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   else
     sudo -S add-apt-repository "deb http://archive.canonical.com/ lucid partner"
-    echo $(tput setaf 6)"|******************************************************************************|"
-    echo $(tput setaf 2)"|   deb http://archive.canonical.com/ lucid partner Added To APT Repository    |"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"
+    echo $bld$cyn"|******************************************************************************|"
+    echo $bld$grn"|   deb http://archive.canonical.com/ lucid partner Added To APT Repository    |"
+    echo $bld$cyn"|______________________________________________________________________________|"
   fi
   echo
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Updating APT                                                                 |"
-  echo $(tput setaf 6)"|                                                                              |"
-  echo $(tput setaf 6)"|******************************************************************************|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Updating APT                                                                 |"
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$cyn"|******************************************************************************|"$bld$grn
   sudo -S apt-get update
-  echo $(tput setaf 6)"|******************************************************************************|"
-  echo $(tput setaf 2)"|                               APT UPDATED                                    |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"
+  echo $bld$cyn"|******************************************************************************|"
+  echo $bld$grn"|                               APT UPDATED                                    |"
+  echo $bld$cyn"|______________________________________________________________________________|"
   echo
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Installing Java JDK 6                                                        |"
-  echo $(tput setaf 6)"|                                                                              |"
-  echo $(tput setaf 6)"|******************************************************************************|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Installing Java JDK 6                                                        |"
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$cyn"|******************************************************************************|"$bld$grn
   sudo -S apt-get install sun-java6-jdk
-  echo $(tput setaf 6)"|******************************************************************************|"
-  echo $(tput setaf 2)"|                          JAVA JDK 6 INSTALLED                                |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"
+  echo $bld$cyn"|******************************************************************************|"
+  echo $bld$grn"|                          JAVA JDK 6 INSTALLED                                |"
+  echo $bld$cyn"|______________________________________________________________________________|"
   echo
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Installing Libs and Other Needed Files To Compile                            |"
-  echo $(tput setaf 6)"|                                                                              |"
-  echo $(tput setaf 6)"|******************************************************************************|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Installing Libs and Other Needed Files To Compile                            |"
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$cyn"|******************************************************************************|"$bld$grn
   sudo -S apt-get install git-core gnupg flex bison gperf build-essential \ zip curl zlib1g-dev libc6-dev lib32ncurses5-dev ia32-libs \ x11proto-core-dev libx11-dev lib32readline-gplv2-dev lib32z-dev \ libgl1-mesa-dev g++-multilib mingw32 tofrodos python-markdown \ libxml2-utils xsltproc
   sudo -S apt-get install libx11-dev:i386
-  echo $(tput setaf 6)"|******************************************************************************|"
-  echo $(tput setaf 2)"|                           Packages Installed                                 |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"
+  echo $bld$cyn"|******************************************************************************|"
+  echo $bld$grn"|                           Packages Installed                                 |"
+  echo $bld$cyn"|______________________________________________________________________________|"
   echo
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 6)"|                                                                              |"
-  echo $(tput setaf 2)"|                     Build Environment Setup Complete                         |"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$grn"|                     Build Environment Setup Complete                         |"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
 
@@ -983,39 +1119,49 @@ function SETUP_BUILD()
 
 function HELPER_INSTALL()
 {
-  echo $(tput bold)
-  if [ -e /usr/bin/githelper ] ; then
-    REPO_MENU
-  else
-    echo $(tput setaf 6)" ______________________________________________________________________________ "
-    echo $(tput setaf 2)"| Would You Like To Install Git Helper Or Run From This Directory              |"
-    echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-    echo $(tput setaf 2)"| [Y] Yes <-(run from any terminal directory)                                  |"
-    echo $(tput setaf 1)"| [N] NO <-(one time run from particualr terminal directory)                   |"
-    echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-    echo $(tput setaf 2)"|     This means that you will not have to cd to the directory where git helper|"
-    echo $(tput setaf 2)"| is located and type ./githelper. After installation you can run the command  |"
-    echo $(tput setaf 2)"| githelper from any directory in a terminal and it will run...                |"
-    echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+    echo $bld$cyn" ______________________________________________________________________________ "
+    echo $bld$cyn"| Would You Like To Install Git Helper Or Run From This Directory              |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"| [Y] Yes <-(run from any terminal directory)                                  |"
+    echo $bld$red"| [N] NO <-(one time run from particualr terminal directory)                   |"
+    echo $bld$grn"| [R] ReInstall <-(Use This For Updates)                                       |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"|     This means that you will not have to cd to the directory where git helper|"
+    echo $bld$grn"| is located and type ./githelper. After installation you can run the command  |"
+    echo $bld$grn"| githelper from any directory in a terminal and it will run...                |"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read install_helper
     case "$install_helper" in
       "Y" | "y" )
         sudo -S cp $PWD/githelper /usr/bin/
-
-        echo $(tput setaf 6)" ______________________________________________________________________________ "
-        echo $(tput setaf 6)"|                                                                              |"
-        echo $(tput setaf 6)"|******************************************************************************|"
-	echo $(tput setaf 2)"|                       Git Helper Has Been Installed                          |"		
-        echo $(tput setaf 6)"|******************************************************************************|"
-        echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+        echo $bld$cyn" ______________________________________________________________________________ "
+        echo $bld$cyn"|                                                                              |"
+        echo $bld$cyn"|******************************************************************************|"
+	echo $bld$grn"|                       Git Helper Has Been Installed                          |"		
+        echo $bld$cyn"|******************************************************************************|"
+        echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
         read -p "Press [Enter] key to continue..."
         githelper
       ;;
       "N" | "n" )
         REPO_MENU
       ;;
+      "R" | "r" )
+        sudo -S cp $PWD/githelper /usr/bin/
+        echo $bld$cyn" ______________________________________________________________________________ "
+        echo $bld$cyn"|                                                                              |"
+        echo $bld$cyn"|******************************************************************************|"
+	echo $bld$grn"|                      Git Helper Has Been ReInstalled                         |"		
+        echo $bld$cyn"|******************************************************************************|"
+        echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+        read -p "Press [Enter] key to continue..."
+	githelper
+      ;;
+      * )
+        echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+        HELPER_INSTALL
+      ;;
     esac
-  fi
 }
 
 ##############################################################
@@ -1024,28 +1170,32 @@ function HELPER_INSTALL()
 
 function UNINSTALL_HELPER()
 {
-  echo $(tput setaf 6)" ______________________________________________________________________________ "
-  echo $(tput setaf 2)"| Would You Like to Remove Git Helper                                          |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 2)"|  [Y] Yes                                                                     |"
-  echo $(tput setaf 1)"|  [N] NO                                                                      |"
-  echo $(tput setaf 6)"|------------------------------------------------------------------------------|"
-  echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Would You Like to Remove Git Helper                                          |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$grn"|  [Y] Yes                                                                     |"
+  echo $bld$red"|  [N] NO                                                                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read add_file
   case "$add_file" in
     "Y" | "y" )
       sudo -S rm /usr/bin/githelper
-      echo $(tput setaf 6)" ______________________________________________________________________________ "
-      echo $(tput setaf 6)"|                                                                              |"
-      echo $(tput setaf 2)"|                      Git Helper Successfully Removed                         |"
-      echo $(tput setaf 6)"|______________________________________________________________________________|"$(tput setaf 2)
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$cyn"|                                                                              |"
+      echo $bld$grn"|                      Git Helper Successfully Removed                         |"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
       read -p "Press [Enter] key to continue..."
-      echo $(tput sgr0)
+      echo $bld$rst
       exit
     ;;
     "N" | "n" )
-      echo $(tput sgr0)
+      echo $bld$rst
       REPO_MENU
+    ;;
+    * )
+      echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+      UNINSTALL_HELPER
     ;;
   esac 
 }
@@ -1053,6 +1203,9 @@ function UNINSTALL_HELPER()
 ##############################################################
 #		     	    MAIN		  	     #
 ##############################################################
-
   TITLE
-  HELPER_INSTALL
+  if [ -e /usr/bin/githelper ] ; then
+    REPO_MENU
+  else
+    HELPER_INSTALL
+  fi
