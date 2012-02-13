@@ -123,6 +123,7 @@ function SETUP_MENU()
 	echo "|  [G] Global Setup                                                            |"
 	echo "|  [S] Setup a new Repo                                                        |"
 	echo "|  [C] Clone a Repo                                                            |"
+	echo "|------------------------------------------------------------------------------|"
 	echo "|  [V] View/Switch Repo                                                        |"
 	echo "|  [X] Git Helper Menu                                                         |"
 	echo "|------------------------------------------------------------------------------|"
@@ -246,6 +247,7 @@ function COMMIT_MENU()
 	echo "|  [C] Commit Changes                                                          |"
 	echo "|  [P] Push Changes To Repo                                                    |"
 	echo "|  [E] Enter/Switch Repo Directory                                             |"
+	echo "|------------------------------------------------------------------------------|"
 	echo "|  [V] View/Switch Repo                                                        |"
 	echo "|  [X] Git Helper Menu                                                         |"
 	echo "|------------------------------------------------------------------------------|"
@@ -320,7 +322,7 @@ function ADD_FILES()
 			git add $FILE_NAME
 			echo "|------------------------------------------------------------------------------|"
 			echo "|______________________________________________________________________________|"
-			ADD_FILE
+			ADD_FILES
 		;;
 		"N" | "n" )
 		;;
@@ -411,7 +413,7 @@ function BRANCH_MENU()
 	echo "|  [V] View Branches                                                           |"
 	echo "|  [S] Switch Branches                                                         |"
 	echo "|  [M] Merge Branch                                                            |"
-	echo "|  [E] Enter/Switch Repo Directory                                             |"
+	echo "|------------------------------------------------------------------------------|"
 	echo "|  [V] View/Switch Repo                                                        |"
 	echo "|  [X] Git Helper Menu                                                         |"
 	echo "|------------------------------------------------------------------------------|"
@@ -447,11 +449,6 @@ function BRANCH_MENU()
 		"M" | "m" )
 		#Merge a Branch
 			MERGE_BRANCH
-			BRANCH_MENU
-		;;
-		"E" | "e" )
-		#switch repo
-			ENTER_DIRECTORY
 			BRANCH_MENU
 		;;
 		"V" | "v" )
@@ -605,6 +602,7 @@ function STASH_MENU()
 	echo "|  [V] View Stashes                                                            |"
 	echo "|  [L] Load a Stash                                                            |"
 	echo "|  [E] Enter/Switch Repo Directory                                             |"
+	echo "|------------------------------------------------------------------------------|"
 	echo "|  [V] View/Switch Repo                                                        |"
 	echo "|  [X] Git Helper Menu                                                         |"
 	echo "|------------------------------------------------------------------------------|"
@@ -692,7 +690,7 @@ function PATCH_MENU()
 	echo "|  [V] View Commits                                                            |"
 	echo "|  [C] Create a New Patch                                                      |"
 	echo "|  [P] Patch Repo                                                              |"
-	echo "|  [E] Enter/Switch Repo Directory                                             |"
+	echo "|------------------------------------------------------------------------------|"
 	echo "|  [V] View/Switch Repo                                                        |"
 	echo "|  [X] Git Helper Menu                                                         |"
 	echo "|------------------------------------------------------------------------------|"
@@ -723,11 +721,6 @@ function PATCH_MENU()
 		"P" | "p" )
 		#Patch a Repo
 			PATCH_REPO
-			PATCH_MENU
-		;;
-		"E" | "e" )
-		#switch repo
-			ENTER_DIRECTORY
 			PATCH_MENU
 		;;
 		"V" | "v" )
