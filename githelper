@@ -45,17 +45,23 @@ function REPO_MENU()
     echo $bld$grn"| [2] Auto Clone Samurai Kernel Repo                                           |"
     echo $bld$grn"| [3] Build Kernel (try to execute build_kernel.sh)                            |"
     echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
+    echo $bld$grn"| [E] Extract Boot Image                                                       |"
     echo $bld$grn"| [I] ReInstall Git Helper                                                     |"
     echo $bld$grn"| [U] UnInstall Git Helper                                                     |"
     echo $bld$grn"| [X] Exit                                                                     |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"
-    echo $bld$grn"| WORKING DIR    : $PWD" 
-    REPO=$(basename $PWD)
-    echo $bld$grn"| CURRENT REPO   : $REPO"
-    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
-    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-  read -p "  ENTER MENU OPTION : " menu
+    echo $bld$grn"| WORKING DIR    : $PWD"  
+    if [ -e .git ] ; then
+      REPO=$(basename $PWD)
+      echo $bld$grn"| CURRENT REPO   : $REPO"
+      CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+      echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    else
+      echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    fi
+    read -p "  ENTER MENU OPTION : " menu
     case "$menu" in
       "G" | "g" )
       #global setup/clone menu
@@ -117,6 +123,12 @@ function REPO_MENU()
 ##############################################################
 #			Menu Divider			     #
 ##############################################################
+      "E" | "e" )
+      #install git helper
+        BOOT_IMG
+        echo $bld$rst
+        REPO_MENU
+      ;;
       "I" | "i" )
       #install git helper
         HELPER_INSTALL
@@ -152,12 +164,24 @@ function REPO_MENU()
     echo $bld$grn"| [2] Auto Clone Samurai Kernel Repo                                           |"
     echo $bld$grn"| [3] Build Kernel (try to execute build_kernel.sh)                            |"
     echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
+    echo $bld$grn"| [E] Extract Boot Image                                                       |"
     echo $bld$grn"| [I] ReInstall Git Helper                                                     |"
     echo $bld$grn"| [U] UnInstall Git Helper                                                     |"
     echo $bld$grn"| [X] Exit                                                                     |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+    echo $bld$grn"| WORKING DIR    : $PWD"  
+    if [ -e .git ] ; then
+      REPO=$(basename $PWD)
+      echo $bld$grn"| CURRENT REPO   : $REPO"
+      CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+      echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    else
+      echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    fi
   fi
-  read -p "  ENTER MENU OPTION : " menu
+    read -p "  ENTER MENU OPTION : " menu
   case "$menu" in
     "G" | "g" )
     #global setup/clone menu
@@ -195,6 +219,12 @@ function REPO_MENU()
 ##############################################################
 #			Menu Divider			     #
 ##############################################################
+      "E" | "e" )
+      #install git helper
+        BOOT_IMG
+        echo $bld$rst
+        REPO_MENU
+      ;;
     "I" | "i" )
     #install git helper
       HELPER_INSTALL
@@ -1199,6 +1229,92 @@ function UNINSTALL_HELPER()
       UNINSTALL_HELPER
     ;;
   esac 
+}
+
+
+function BOOT_IMG()
+{
+
+DIR=$PWD
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Please Input The Name of The Boot Image and Output File                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+  read -p "  Boot Image Name : " boot
+  read -p "  Output File Name: " out
+  while getopts "b:o:" opt 
+  do
+    case "$opt" in
+      b) boot=`readlink -f "$OPTARG"`;;
+      o) out=`readlink -f "$OPTARG"`;;
+    esac
+  done
+
+# Check options
+  if [ ! -f "$boot" ]; then
+    echo "Specify a boot.img with -b"
+    echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+    BOOT_IMG
+  fi
+
+  if [ ! -n "$out" ]; then
+    echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+    BOOT_IMG
+  fi
+  mkdir -p $out
+
+# Reads header from file
+#BOOT_IMAGE_OFFSETS
+#boot_offset=xx;boot_len=xx;recovery_offset=xx;recovery_len=xx;
+  eval $(grep -a -m 1 -A 1 BOOT_IMAGE_OFFSETS $boot | tail -n 1)
+
+# Leave out 512 byte header between zImage and boot
+  zimage_len=$(($boot_offset-1))
+
+# Display info
+  echo "zImage offset = 0"
+  echo "zImage length = "$zimage_len
+  echo "Boot offset = "$boot_offset
+  echo "Boot length = "$boot_len
+  echo "Recovery offset = "$recovery_offset
+  echo "Recovery length = "$recovery_len
+
+# Split images
+  echo
+  echo "Splitting images..."
+  dd if=$boot skip=0 count=$zimage_len of=$DIR/$out/zImage >& /dev/null
+  dd if=$boot skip=$boot_offset count=$boot_len of=$DIR/$out/boot.cpio.gz >& /dev/null
+  dd if=$boot skip=$recovery_offset count=$recovery_len of=$DIR/$out/recovery.cpio.gz >& /dev/null
+
+# Split initramfs from zImage
+  echo "Finding initramfs..."
+  pos=`grep -P -a -b --only-matching '\x1F\x8B\x08' $DIR/$out/zImage | cut -f 1 -d : | grep '1' | awk '(NR==1)'`
+  dd if=$DIR/$out/zImage bs=$pos skip=1 2> /dev/null | gunzip > $DIR/$out/initramfs.dat 2> /dev/null
+  start=`grep -a -b --only-matching '070701' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
+  end=`grep -a -b --only-matching 'TRAILER!!!' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
+  end=$((end + 10))
+  count=$((end - start))
+  echo "Spliting initramfs from zImage..."
+  dd if=$DIR/$out/initramfs.dat ibs=$start skip=1 of=$DIR/$out/temp >& /dev/null
+  dd if=$DIR/$out/temp bs=$count count=1 of=$DIR/$out/initramfs.cpio >& /dev/null
+  rm $DIR/$out/temp $DIR/$out/initramfs.dat
+
+# Extract cpio files
+  echo "Extracting cpio files..."
+  mkdir $DIR/$out/{boot,recovery,initramfs}
+  cd $DIR/$out/boot
+  zcat $DIR/$out/boot.cpio.gz | cpio -i --no-absolute-filenames >& /dev/null
+  cd $DIR/$out/recovery
+  zcat $DIR/$out/recovery.cpio.gz | cpio -i --no-absolute-filenames >& /dev/null
+  cd $DIR/$out/initramfs
+  cpio -i --no-absolute-filenames < /$DIR/$out/initramfs.cpio >& /dev/null
+
+# Deleting initramfs.cpio since it isn't quite a valid cpio
+  rm $DIR/$out/initramfs.cpio
+  echo "Done"
+  echo "Done"
+  echo $bld$cyn"|******************************************************************************|"
+  echo $bld$grn"|                           Packages Installed                                 |"
+  echo $bld$cyn"|______________________________________________________________________________|"
 }
 
 ##############################################################
