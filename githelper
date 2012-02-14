@@ -34,20 +34,20 @@ function REPO_MENU()
     echo $bld$cyn" ______________________________________________________________________________ "
     echo $bld$cyn"| Git Helper Menu                                                              |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"
-    echo $bld$grn"|  [G] Global Setup/Clone Menu                                                 |"
-    echo $bld$grn"|  [C] Commit Helper Menu                                                      |"
-    echo $bld$grn"|  [B] Branch Helper Menu                                                      |"
-    echo $bld$grn"|  [S] Stash Helper Menu                                                       |"
-    echo $bld$grn"|  [P] Patch Helper Menu                                                       |"
-    echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+    echo $bld$grn"| [G] Global Setup/Clone Menu                                                  |"
+    echo $bld$grn"| [C] Commit Helper Menu                                                       |"
+    echo $bld$grn"| [B] Branch Helper Menu                                                       |"
+    echo $bld$grn"| [S] Stash Helper Menu                                                        |"
+    echo $bld$grn"| [P] Patch Helper Menu                                                        |"
+    echo $bld$grn"| [V] View/Switch Repo                                                         |"
     echo $bld$cyn"|-Build-Helper-Menu------------------------------------------------------------|"
-    echo $bld$grn"|  [1] Setup Build Environment (installs build packages)                       |"
-    echo $bld$grn"|  [2] Auto Clone Samurai Kernel Repo                                          |"
-    echo $bld$grn"|  [3] Build Kernel (try to execute build_kernel.sh)                           |"
+    echo $bld$grn"| [1] Setup Build Environment (installs build packages)                        |"
+    echo $bld$grn"| [2] Auto Clone Samurai Kernel Repo                                           |"
+    echo $bld$grn"| [3] Build Kernel (try to execute build_kernel.sh)                            |"
     echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
-    echo $bld$grn"|  [I] ReInstall Git Helper                                                    |"
-    echo $bld$grn"|  [U] UnInstall Git Helper                                                    |"
-    echo $bld$grn"|  [X] Exit                                                                    |"
+    echo $bld$grn"| [I] ReInstall Git Helper                                                     |"
+    echo $bld$grn"| [U] UnInstall Git Helper                                                     |"
+    echo $bld$grn"| [X] Exit                                                                     |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"
     echo $bld$grn"| WORKING DIR    : $PWD" 
     REPO=$(basename $PWD)
@@ -55,7 +55,7 @@ function REPO_MENU()
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-  read menu
+  read -p "  ENTER MENU OPTION : " menu
     case "$menu" in
       "G" | "g" )
       #global setup/clone menu
@@ -141,23 +141,23 @@ function REPO_MENU()
     echo $bld$cyn" ______________________________________________________________________________ "
     echo $red$cyn"| Limited Git Helper Menu <-(please use [V], select a Repo to unlock options)  |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"
-    echo $bld$grn"|  [G] Global Setup/Clone Menu                                                 |"
-    echo $rst$grn"|  [C] Commit Helper Menu                                                      |"
-    echo $rst$grn"|  [B] Branch Helper Menu                                                      |"
-    echo $rst$grn"|  [S] Stash Helper Menu                                                       |"
-    echo $rst$grn"|  [P] Patch Helper Menu                                                       |"
-    echo $bld$grn"|  [V] View/Switch Repo                                                        |"
+    echo $bld$grn"| [G] Global Setup/Clone Menu                                                  |"
+    echo $rst$grn"| [C] Commit Helper Menu                                                       |"
+    echo $rst$grn"| [B] Branch Helper Menu                                                       |"
+    echo $rst$grn"| [S] Stash Helper Menu                                                        |"
+    echo $rst$grn"| [P] Patch Helper Menu                                                        |"
+    echo $bld$grn"| [V] View/Switch Repo                                                         |"
     echo $bld$cyn"|-Build-Helper-Menu------------------------------------------------------------|"
-    echo $bld$grn"|  [1] Setup Build Environment (installs build packages)                       |"
-    echo $bld$grn"|  [2] Auto Clone Samurai Kernel Repo                                          |"
-    echo $bld$grn"|  [3] Build Kernel (try to execute build_kernel.sh)                           |"
+    echo $bld$grn"| [1] Setup Build Environment (installs build packages)                        |"
+    echo $bld$grn"| [2] Auto Clone Samurai Kernel Repo                                           |"
+    echo $bld$grn"| [3] Build Kernel (try to execute build_kernel.sh)                            |"
     echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
-    echo $bld$grn"|  [I] ReInstall Git Helper                                                    |"
-    echo $bld$grn"|  [U] UnInstall Git Helper                                                    |"
-    echo $bld$grn"|  [X] Exit                                                                    |"
+    echo $bld$grn"| [I] ReInstall Git Helper                                                     |"
+    echo $bld$grn"| [U] UnInstall Git Helper                                                     |"
+    echo $bld$grn"| [X] Exit                                                                     |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   fi
-  read menu
+  read -p "  ENTER MENU OPTION : " menu
   case "$menu" in
     "G" | "g" )
     #global setup/clone menu
@@ -226,12 +226,12 @@ function SETUP_MENU()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| Global Setup / Clone Menu                                                    |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [G] Global Setup                                                            |"
-  echo $bld$grn"|  [S] Setup a new Repo                                                        |"
-  echo $bld$grn"|  [C] Clone a Repo                                                            |"
+  echo $bld$grn"| [G] Global Setup                                                             |"
+  echo $bld$grn"| [S] Setup a new Repo                                                         |"
+  echo $bld$grn"| [C] Clone a Repo                                                             |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
-  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$grn"| [V] View/Switch Repo                                                         |"
+  echo $bld$grn"| [X] Git Helper Menu                                                          |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| WORKING DIR    : $PWD"  
     if [ -e .git ] ; then
@@ -244,7 +244,7 @@ function SETUP_MENU()
       echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
       echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     fi
-    read setup_menu
+    read -p "  ENTER MENU OPTION : " setup_menu
     case "$setup_menu" in
       "G" | "g" )	
       #Global Git Setup
@@ -344,13 +344,13 @@ function COMMIT_MENU()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| Commit Helper Menu                                                           |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [A] Add Files To Repo                                                       |"
-  echo $bld$grn"|  [R] Remove Files From Repo                                                  |"
-  echo $bld$grn"|  [C] Commit Changes                                                          |"
-  echo $bld$grn"|  [P] Push Changes To Repo                                                    |"
+  echo $bld$grn"| [A] Add Files To Repo                                                        |"
+  echo $bld$grn"| [R] Remove Files From Repo                                                   |"
+  echo $bld$grn"| [C] Commit Changes                                                           |"
+  echo $bld$grn"| [P] Push Changes To Repo                                                     |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
-  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$grn"| [V] View/Switch Repo                                                         |"
+  echo $bld$grn"| [X] Git Helper Menu                                                          |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
@@ -365,7 +365,7 @@ function COMMIT_MENU()
       read -p "Press [Enter] key to continue..."
       REPO_MENU
   fi
-  read commit_menu
+  read -p "  ENTER MENU OPTION : " commit_menu
   case "$commit_menu" in
     "A" | "a" )
     #add files to repo
@@ -411,11 +411,11 @@ function ADD_FILES()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| Would You Like to Add a File to your Repo                                    |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [Y] Yes                                                                     |"
-  echo $bld$red"|  [N] NO                                                                      |"
+  echo $bld$grn"| [Y] Yes                                                                      |"
+  echo $bld$red"| [N] NO                                                                       |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-  read add_file
+  read  -p "  ENTER MENU OPTION : " add_file
   case "$add_file" in
     "Y" | "y" )
       echo $bld$cyn" ______________________________________________________________________________ "
@@ -442,11 +442,11 @@ function REMOVE_FILES()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| Would You Like to Remove a File from your Repo                               |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [Y] Yes                                                                     |"
-  echo $bld$red"|  [N] NO                                                                      |"
+  echo $bld$grn"| [Y] Yes                                                                      |"
+  echo $bld$red"| [N] NO                                                                       |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-  read remove_file
+  read -p "  ENTER MENU OPTION : " remove_file
   case "$remove_file" in
     "Y" | "y" )
       echo $bld$cyn" ______________________________________________________________________________ "
@@ -507,11 +507,11 @@ function PUSH()
     echo $bld$cyn" ______________________________________________________________________________ "
     echo $bld$cyn"| Would You Still Like Push Your Files                                         |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"
-    echo $bld$grn"|  [Y] Yes                                                                     |"
-    echo $bld$red"|  [N] NO                                                                      |"
+    echo $bld$grn"| [Y] Yes                                                                      |"
+    echo $bld$red"| [N] NO                                                                       |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-    read change_name
+    read -p "  ENTER MENU OPTION : " change_name
     case "$change_name" in
       "Y" | "y" )
   	echo $bld$cyn" ______________________________________________________________________________ "
@@ -545,13 +545,13 @@ function BRANCH_MENU()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| Branch Helper Menu                                                           |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [C] Create a New Branch                                                     |"
-  echo $bld$grn"|  [E] View Branches                                                           |"
-  echo $bld$grn"|  [S] Switch Branches                                                         |"
-  echo $bld$grn"|  [M] Merge Branch                                                            |"
+  echo $bld$grn"| [C] Create a New Branch                                                      |"
+  echo $bld$grn"| [E] View Branches                                                            |"
+  echo $bld$grn"| [S] Switch Branches                                                          |"
+  echo $bld$grn"| [M] Merge Branch                                                             |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
-  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$grn"| [V] View/Switch Repo                                                         |"
+  echo $bld$grn"| [X] Git Helper Menu                                                          |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
@@ -566,7 +566,7 @@ function BRANCH_MENU()
     read -p "Press [Enter] key to continue..."
     REPO_MENU
   fi
-  read branch_menu
+  read -p "  ENTER MENU OPTION : " branch_menu
   case "$branch_menu" in
     "B" | "b" )
     #Create a New Branch & Push Branch
@@ -672,12 +672,12 @@ function MERGE_BRANCH2()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| If there were errors Choose [D] After Fixing Choose [C]                      |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [D] Show Conflicts <-(fix if needed)                                        |"
-  echo $bld$grn"|  [C] Commit/Review/Push                                                      |"
-  echo $bld$grn"|  [X] Choose If There Were No Errors                                          |"
+  echo $bld$grn"| [D] Show Conflicts <-(fix if needed)                                         |"
+  echo $bld$grn"| [C] Commit/Review/Push                                                       |"
+  echo $bld$grn"| [X] Choose If There Were No Errors                                           |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-  read diff
+  read -p "  ENTER MENU OPTION : " diff
   case "$diff" in
     "D" | "d" )	
       echo $bld$cyn" ______________________________________________________________________________ "
@@ -726,12 +726,12 @@ function STASH_MENU()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| Git Stash Menu                                                               |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [S] Stash Changes                                                           |"
-  echo $bld$grn"|  [E] View Stash                                                              |"
-  echo $bld$grn"|  [L] Load a Stash                                                            |"
+  echo $bld$grn"| [S] Stash Changes                                                            |"
+  echo $bld$grn"| [E] View Stash                                                               |"
+  echo $bld$grn"| [L] Load a Stash                                                             |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
-  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$grn"| [V] View/Switch Repo                                                         |"
+  echo $bld$grn"| [X] Git Helper Menu                                                          |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
@@ -746,7 +746,7 @@ function STASH_MENU()
     read -p "Press [Enter] key to continue..."
     REPO_MENU
   fi
-  read stash_menu
+  read -p "  ENTER MENU OPTION : " stash_menu
   case "$stash_menu" in
     "S" | "s" )
     #Stash changes
@@ -826,12 +826,12 @@ function PATCH_MENU()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| PATCH Helper Menu                                                            |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [E] View Commits                                                            |"
-  echo $bld$grn"|  [C] Create a New Patch                                                      |"
-  echo $bld$grn"|  [P] Patch Repo                                                              |"
+  echo $bld$grn"| [E] View Commits                                                             |"
+  echo $bld$grn"| [C] Create a New Patch                                                       |"
+  echo $bld$grn"| [P] Patch Repo                                                               |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [V] View/Switch Repo                                                        |"
-  echo $bld$grn"|  [X] Git Helper Menu                                                         |"
+  echo $bld$grn"| [V] View/Switch Repo                                                         |"
+  echo $bld$grn"| [X] Git Helper Menu                                                          |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
@@ -846,7 +846,7 @@ function PATCH_MENU()
     read -p "Press [Enter] key to continue..."
     REPO_MENU
   fi
-  read patch_menu
+  read -p "  ENTER MENU OPTION : " patch_menu
   case "$patch_menu" in
     "E" | "e" )
     #View Commits
@@ -1022,11 +1022,11 @@ function CHANGE_FILE_NAME()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Would You Like to Rename A .sh File and Try Again                            |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [Y] Yes                                                                     |"
-  echo $bld$red"|  [N] NO                                                                      |"
+  echo $bld$grn"| [Y] Yes                                                                      |"
+  echo $bld$red"| [N] NO                                                                       |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-  read change_name
+  read -p "  ENTER MENU OPTION : " change_name
   case "$change_name" in
     "Y" | "y" )
       echo $bld$cyn" ______________________________________________________________________________ "
@@ -1131,7 +1131,7 @@ function HELPER_INSTALL()
     echo $bld$grn"| is located and type ./githelper. After installation you can run the command  |"
     echo $bld$grn"| githelper from any directory in a terminal and it will run...                |"
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-    read install_helper
+    read -p "  ENTER MENU OPTION : " install_helper
     case "$install_helper" in
       "Y" | "y" )
         sudo -S cp $PWD/githelper /usr/bin/
@@ -1174,11 +1174,11 @@ function UNINSTALL_HELPER()
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"| Would You Like to Remove Git Helper                                          |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  echo $bld$grn"|  [Y] Yes                                                                     |"
-  echo $bld$red"|  [N] NO                                                                      |"
+  echo $bld$grn"| [Y] Yes                                                                      |"
+  echo $bld$red"| [N] NO                                                                       |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-  read add_file
+  read -p "  ENTER MENU OPTION : " add_file
   case "$add_file" in
     "Y" | "y" )
       sudo -S rm /usr/bin/githelper
