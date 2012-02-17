@@ -124,7 +124,7 @@ BUILD_KERNEL()
       echo $bld$cyn"|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|"
       echo $bld$grn"| You have some errors to fix before we can proceed...                         |"
       echo $bld$cyn"|______________________________________________________________________________|"
-      exit
+      ./build_kernel.sh
     fi
     END_TIME=`date +%s`
     let "ELAPSED_TIME=$END_TIME-$START_TIME"

@@ -44,8 +44,8 @@ function REPO_MENU()
     echo $bld$grn"| [1] Setup Build Environment (installs build packages)                        |"
     echo $bld$grn"| [2] Auto Clone Samurai Kernel Repo                                           |"
     echo $bld$grn"| [3] Build Kernel (try to execute build_kernel.sh)                            |"
-    echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
     echo $bld$grn"| [E] Extract Boot Image                                                       |"
+    echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
     echo $bld$grn"| [I] ReInstall Git Helper                                                     |"
     echo $bld$grn"| [U] UnInstall Git Helper                                                     |"
     echo $bld$grn"| [X] Exit                                                                     |"
@@ -120,15 +120,15 @@ function REPO_MENU()
         echo $bld$rst
         REPO_MENU
       ;;
-##############################################################
-#			Menu Divider			     #
-##############################################################
       "E" | "e" )
       #install git helper
         BOOT_IMG
         echo $bld$rst
         REPO_MENU
       ;;
+##############################################################
+#			Menu Divider			     #
+##############################################################
       "I" | "i" )
       #install git helper
         HELPER_INSTALL
@@ -163,8 +163,8 @@ function REPO_MENU()
     echo $bld$grn"| [1] Setup Build Environment (installs build packages)                        |"
     echo $bld$grn"| [2] Auto Clone Samurai Kernel Repo                                           |"
     echo $bld$grn"| [3] Build Kernel (try to execute build_kernel.sh)                            |"
-    echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
     echo $bld$grn"| [E] Extract Boot Image                                                       |"
+    echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
     echo $bld$grn"| [I] ReInstall Git Helper                                                     |"
     echo $bld$grn"| [U] UnInstall Git Helper                                                     |"
     echo $bld$grn"| [X] Exit                                                                     |"
@@ -216,15 +216,15 @@ function REPO_MENU()
       echo $bld$rst
       REPO_MENU
     ;;
-##############################################################
-#			Menu Divider			     #
-##############################################################
       "E" | "e" )
       #install git helper
         BOOT_IMG
         echo $bld$rst
         REPO_MENU
       ;;
+##############################################################
+#			Menu Divider			     #
+##############################################################
     "I" | "i" )
     #install git helper
       HELPER_INSTALL
@@ -259,6 +259,8 @@ function SETUP_MENU()
   echo $bld$grn"| [G] Global Setup                                                             |"
   echo $bld$grn"| [S] Setup a new Repo                                                         |"
   echo $bld$grn"| [C] Clone a Repo                                                             |"
+  echo $bld$grn"| [U] Add Remote Host"
+  echo $bld$grn"| [F] Fetch Upstream Changes"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| [V] View/Switch Repo                                                         |"
   echo $bld$grn"| [X] Git Helper Menu                                                          |"
@@ -294,6 +296,17 @@ function SETUP_MENU()
       "V" | "v" )
       #switch repo
         ENTER_DIRECTORY
+        SETUP_MENU
+      ;;
+      "U" | "u" )
+      #add an upstream
+        GIT_UPSTREAM
+        SETUP_MENU
+      ;;
+      "F" | "f" )
+      #fetch upstream
+        GIT_FETCH
+	MERGE_FETCH
         SETUP_MENU
       ;;
       "X" | "x" )
@@ -364,6 +377,75 @@ function GIT_CLONE()
   read -p "Press [Enter] key to continue..."
   ENTER_DIRECTORY	
 }  
+
+function GIT_UPSTREAM()
+{
+  if [ -e .git ] ; then
+    echo $bld$cyn" ______________________________________________________________________________ "
+    echo $bld$cyn"| Please Enter The Name You Would Like To Give This Remote & Remote Address    |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+    read -p "  Enter REMOTE NAME : " REMOTE_NAME
+    read -p "  Enter REMOTE ADDRESS : " REMOTE_ADDRESS
+    git remote add $REMOTE_NAME $REMOTE_ADDRESS
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    read -p "Press [Enter] key to continue..."
+  else
+    echo $bld$red"****************************You*Are*Not*In*A*Git*Repo***************************"
+    ENTER_DIRECTORY
+    GIT_UPSTREAM
+  fi
+}  
+
+function GIT_FETCH()
+{
+  if [ -e .git ] ; then
+        echo $bld$cyn" ______________________________________________________________________________ "
+        echo $bld$cyn"| ENTER REMOTE BRANCH TO FETCH                                                 |"
+        echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+        cat .git/config
+        read -p "  Enter REMOTE NAME : " REMOTE_NAME
+        git fetch $REMOTE_NAME
+        echo $bld$cyn"|------------------------------------------------------------------------------|"
+        echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+        read -p "Press [Enter] key to continue..."
+  else
+    echo $bld$red"****************************You*Are*Not*In*A*Git*Repo***************************"
+    ENTER_DIRECTORY
+    GIT_FETCH
+  fi
+}
+
+function MERGE_FETCH()
+{
+    echo $bld$cyn" ______________________________________________________________________________ "
+    echo $bld$cyn"| Would You Like to Add a File to your Repo                                    |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$grn"| [Y] Yes                                                                      |"
+    echo $bld$red"| [N] NO                                                                       |"
+    echo $bld$cyn"|------------------------------------------------------------------------------|"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    read  -p "  ENTER MENU OPTION : " add_file
+    case "$add_file" in
+      "Y" | "y" )
+        echo $bld$cyn" ______________________________________________________________________________ "
+        echo $bld$cyn"| Enter Branch to Merge Into                                                   |"
+        echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+        git branch
+        read -p "  ENTER BRANCH Name : " BRANCH_NAME
+        git merge $REMOTE_NAME/$BRANCH_NAME
+        echo $bld$cyn"|------------------------------------------------------------------------------|"
+        echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+        read -p "Press [Enter] key to continue..."
+        MERGE_BRANCH2
+        echo $bld$red"****************************You*Are*Not*In*A*Git*Repo***************************"
+        ENTER_DIRECTORY
+        GIT_FETCH
+      ;;
+      "N" | "n" )
+      ;;
+    esac
+}
 
 ##############################################################
 #			Commit Helper Menu		     #
@@ -598,7 +680,7 @@ function BRANCH_MENU()
   fi
   read -p "  ENTER MENU OPTION : " branch_menu
   case "$branch_menu" in
-    "B" | "b" )
+    "C" | "c" )
     #Create a New Branch & Push Branch
       BRANCH
       BRANCH_MENU
@@ -999,8 +1081,10 @@ function CLONE_SAMURAI()
   echo $bld$cyn"| Cloning Samurai Repo                                                         |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   cd ~/
-  git clone git@github.com:iapearthbound/git_helper.git
-  cd ~/git_helper
+  git clone git@github.com:iapearthbound/ave.cm7.git
+  cd ~/ave.cm7
+  echo $bld$cyn"|------------------------------------------------------------------------------|"
+  git remote add upstream git@github.com:iapearthbound/ave.cm7.git
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
@@ -1089,11 +1173,11 @@ function CHANGE_FILE_NAME()
 
 function SETUP_BUILD()
 {
+  cd ~/
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Setting Up Build Environment                                                 |"
   echo $bld$cyn"|                                                                              |"
   echo $bld$cyn"|______________________________________________________________________________|"
-  echo
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Adding Source to APT                                                         |"
   echo $bld$cyn"|                                                                              |"
@@ -1108,7 +1192,6 @@ function SETUP_BUILD()
     echo $bld$grn"|   deb http://archive.canonical.com/ lucid partner Added To APT Repository    |"
     echo $bld$cyn"|______________________________________________________________________________|"
   fi
-  echo
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Updating APT                                                                 |"
   echo $bld$cyn"|                                                                              |"
@@ -1117,7 +1200,6 @@ function SETUP_BUILD()
   echo $bld$cyn"|******************************************************************************|"
   echo $bld$grn"|                               APT UPDATED                                    |"
   echo $bld$cyn"|______________________________________________________________________________|"
-  echo
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Installing Java JDK 6                                                        |"
   echo $bld$cyn"|                                                                              |"
@@ -1126,7 +1208,6 @@ function SETUP_BUILD()
   echo $bld$cyn"|******************************************************************************|"
   echo $bld$grn"|                          JAVA JDK 6 INSTALLED                                |"
   echo $bld$cyn"|______________________________________________________________________________|"
-  echo
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Installing Libs and Other Needed Files To Compile                            |"
   echo $bld$cyn"|                                                                              |"
@@ -1136,10 +1217,143 @@ function SETUP_BUILD()
   echo $bld$cyn"|******************************************************************************|"
   echo $bld$grn"|                           Packages Installed                                 |"
   echo $bld$cyn"|______________________________________________________________________________|"
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Adding Udev Rules for Usb Access                                             |"
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$cyn"|******************************************************************************|"$bld$grn
+  if [ -e /etc/udev/rules.d/51-android.rules ] ; then
+    sudo mv /etc/udev/rules.d/51-android.rules /etc/udev/rules.d/51-android.rules~
+    sudo sh -c " echo '# adb protocol on passion (Nexus One)' > /etc/udev/rules.d/51-android.rules"
+v1='SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4e12", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v1' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# fastboot protocol on passion (Nexus One)' >> /etc/udev/rules.d/51-android.rules"
+v2='SUBSYSTEM=="usb", ATTR{idVendor}=="0bb4", ATTR{idProduct}=="0fff", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v2' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# adb protocol on crespo/crespo4g (Nexus S)' >> /etc/udev/rules.d/51-android.rules"
+v3='SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4e22", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v3' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# fastboot protocol on crespo/crespo4g (Nexus S)' >> /etc/udev/rules.d/51-android.rules"
+v4='SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4e20", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v4' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# adb protocol on stingray/wingray (Xoom)' >> /etc/udev/rules.d/51-android.rules"
+v5='SUBSYSTEM=="usb", ATTR{idVendor}=="22b8", ATTR{idProduct}=="70a9", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v5' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# fastboot protocol on stingray/wingray (Xoom)' >> /etc/udev/rules.d/51-android.rules"
+v6='SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="708c", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v6' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# adb protocol on maguro/toro (Galaxy Nexus)' >> /etc/udev/rules.d/51-android.rules"
+v7='SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", ATTR{idProduct}=="6860", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v7' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# fastboot protocol on maguro/toro (Galaxy Nexus)' >> /etc/udev/rules.d/51-android.rules"
+v8='SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4e30", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v8' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# adb protocol on panda (PandaBoard)' >> /etc/udev/rules.d/51-android.rules"
+v9='SUBSYSTEM=="usb", ATTR{idVendor}=="0451", ATTR{idProduct}=="d101", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v9' >> /etc/udev/rules.d/51-android.rules"
+    sudo sh -c " echo '# fastboot protocol on panda (PandaBoard)' >> /etc/udev/rules.d/51-android.rules"
+v10='SUBSYSTEM=="usb", ATTR{idVendor}=="0451", ATTR{idProduct}=="d022", MODE="0600", OWNER="'$USER'"'
+    sudo sh -c " echo '$v10' >> /etc/udev/rules.d/51-android.rules"
+  fi
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$grn"|                         USB Rules Have Been Set                              |"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   echo
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"|                                                                              |"
   echo $bld$grn"|                     Build Environment Setup Complete                         |"
+  echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+  read -p "Press [Enter] key to continue..."
+}
+
+##############################################################
+#		     Extract Boot Image		  	     #
+##############################################################
+
+function BOOT_IMG()
+{
+
+  #boot image extractor thanks goes to zMan0900... 
+  #(with a few modifications to work from githelper by earthbound)
+
+  DIR=$PWD
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Please Input The Name of The Boot Image and Output File                      |"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+  read -p "  Boot Image Name : " boot
+  read -p "  Output File Name: " out
+  while getopts "b:o:" opt 
+  do
+    case "$opt" in
+      b) boot=`readlink -f "$OPTARG"`;;
+      o) out=`readlink -f "$OPTARG"`;;
+    esac
+  done
+
+  # Check options
+  if [ ! -f "$boot" ]; then
+    echo "Specify a boot.img with -b"
+    echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+    BOOT_IMG
+  fi
+
+  if [ ! -n "$out" ]; then
+    echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
+    BOOT_IMG
+  fi
+  mkdir -p $out
+
+  # Reads header from file
+  #BOOT_IMAGE_OFFSETS
+  #boot_offset=xx;boot_len=xx;recovery_offset=xx;recovery_len=xx;
+  eval $(grep -a -m 1 -A 1 BOOT_IMAGE_OFFSETS $boot | tail -n 1)
+
+  # Leave out 512 byte header between zImage and boot
+  zimage_len=$(($boot_offset-1))
+
+  # Display info
+  echo "zImage offset = 0"
+  echo "zImage length = "$zimage_len
+  echo "Boot offset = "$boot_offset
+  echo "Boot length = "$boot_len
+  echo "Recovery offset = "$recovery_offset
+  echo "Recovery length = "$recovery_len
+
+  # Split images
+  echo
+  echo "Splitting images..."
+  dd if=$boot skip=0 count=$zimage_len of=$DIR/$out/zImage >& /dev/null
+  dd if=$boot skip=$boot_offset count=$boot_len of=$DIR/$out/boot.cpio.gz >& /dev/null
+  dd if=$boot skip=$recovery_offset count=$recovery_len of=$DIR/$out/recovery.cpio.gz >& /dev/null
+
+  # Split initramfs from zImage
+  echo "Finding initramfs..."
+  pos=`grep -P -a -b --only-matching '\x1F\x8B\x08' $DIR/$out/zImage | cut -f 1 -d : | grep '1' | awk '(NR==1)'`
+  dd if=$DIR/$out/zImage bs=$pos skip=1 2> /dev/null | gunzip > $DIR/$out/initramfs.dat 2> /dev/null
+  start=`grep -a -b --only-matching '070701' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
+  end=`grep -a -b --only-matching 'TRAILER!!!' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
+  end=$((end + 10))
+  count=$((end - start))
+  echo "Spliting initramfs from zImage..."
+  dd if=$DIR/$out/initramfs.dat ibs=$start skip=1 of=$DIR/$out/temp >& /dev/null
+  dd if=$DIR/$out/temp bs=$count count=1 of=$DIR/$out/initramfs.cpio >& /dev/null
+  rm $DIR/$out/temp $DIR/$out/initramfs.dat
+
+  # Extract cpio files
+  echo "Extracting cpio files..."
+  mkdir $DIR/$out/{boot,recovery,initramfs}
+  cd $DIR/$out/boot
+  zcat $DIR/$out/boot.cpio.gz | cpio -i --no-absolute-filenames >& /dev/null
+  cd $DIR/$out/recovery
+  zcat $DIR/$out/recovery.cpio.gz | cpio -i --no-absolute-filenames >& /dev/null
+  cd $DIR/$out/initramfs
+  cpio -i --no-absolute-filenames < /$DIR/$out/initramfs.cpio >& /dev/null
+
+  # Deleting initramfs.cpio since it isn't quite a valid cpio
+  rm $DIR/$out/initramfs.cpio
+  cd $DIR
+  echo $bld$cyn"|******************************************************************************|"
+  echo $bld$grn"| BOOT IMAGE EXTRACTED TO: $DIR/$out"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
 }
@@ -1229,92 +1443,6 @@ function UNINSTALL_HELPER()
       UNINSTALL_HELPER
     ;;
   esac 
-}
-
-
-function BOOT_IMG()
-{
-
-DIR=$PWD
-  echo $bld$cyn" ______________________________________________________________________________ "
-  echo $bld$cyn"| Please Input The Name of The Boot Image and Output File                      |"
-  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
-  read -p "  Boot Image Name : " boot
-  read -p "  Output File Name: " out
-  while getopts "b:o:" opt 
-  do
-    case "$opt" in
-      b) boot=`readlink -f "$OPTARG"`;;
-      o) out=`readlink -f "$OPTARG"`;;
-    esac
-  done
-
-# Check options
-  if [ ! -f "$boot" ]; then
-    echo "Specify a boot.img with -b"
-    echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
-    BOOT_IMG
-  fi
-
-  if [ ! -n "$out" ]; then
-    echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
-    BOOT_IMG
-  fi
-  mkdir -p $out
-
-# Reads header from file
-#BOOT_IMAGE_OFFSETS
-#boot_offset=xx;boot_len=xx;recovery_offset=xx;recovery_len=xx;
-  eval $(grep -a -m 1 -A 1 BOOT_IMAGE_OFFSETS $boot | tail -n 1)
-
-# Leave out 512 byte header between zImage and boot
-  zimage_len=$(($boot_offset-1))
-
-# Display info
-  echo "zImage offset = 0"
-  echo "zImage length = "$zimage_len
-  echo "Boot offset = "$boot_offset
-  echo "Boot length = "$boot_len
-  echo "Recovery offset = "$recovery_offset
-  echo "Recovery length = "$recovery_len
-
-# Split images
-  echo
-  echo "Splitting images..."
-  dd if=$boot skip=0 count=$zimage_len of=$DIR/$out/zImage >& /dev/null
-  dd if=$boot skip=$boot_offset count=$boot_len of=$DIR/$out/boot.cpio.gz >& /dev/null
-  dd if=$boot skip=$recovery_offset count=$recovery_len of=$DIR/$out/recovery.cpio.gz >& /dev/null
-
-# Split initramfs from zImage
-  echo "Finding initramfs..."
-  pos=`grep -P -a -b --only-matching '\x1F\x8B\x08' $DIR/$out/zImage | cut -f 1 -d : | grep '1' | awk '(NR==1)'`
-  dd if=$DIR/$out/zImage bs=$pos skip=1 2> /dev/null | gunzip > $DIR/$out/initramfs.dat 2> /dev/null
-  start=`grep -a -b --only-matching '070701' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
-  end=`grep -a -b --only-matching 'TRAILER!!!' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
-  end=$((end + 10))
-  count=$((end - start))
-  echo "Spliting initramfs from zImage..."
-  dd if=$DIR/$out/initramfs.dat ibs=$start skip=1 of=$DIR/$out/temp >& /dev/null
-  dd if=$DIR/$out/temp bs=$count count=1 of=$DIR/$out/initramfs.cpio >& /dev/null
-  rm $DIR/$out/temp $DIR/$out/initramfs.dat
-
-# Extract cpio files
-  echo "Extracting cpio files..."
-  mkdir $DIR/$out/{boot,recovery,initramfs}
-  cd $DIR/$out/boot
-  zcat $DIR/$out/boot.cpio.gz | cpio -i --no-absolute-filenames >& /dev/null
-  cd $DIR/$out/recovery
-  zcat $DIR/$out/recovery.cpio.gz | cpio -i --no-absolute-filenames >& /dev/null
-  cd $DIR/$out/initramfs
-  cpio -i --no-absolute-filenames < /$DIR/$out/initramfs.cpio >& /dev/null
-
-# Deleting initramfs.cpio since it isn't quite a valid cpio
-  rm $DIR/$out/initramfs.cpio
-  echo "Done"
-  echo "Done"
-  echo $bld$cyn"|******************************************************************************|"
-  echo $bld$grn"|                           Packages Installed                                 |"
-  echo $bld$cyn"|______________________________________________________________________________|"
 }
 
 ##############################################################

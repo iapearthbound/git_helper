@@ -56,7 +56,7 @@ source $PWD/functions
     #Platform Specific Variables
       DEFCONFIG_STRING=cleangb_bml_defconfig
       KERNEL_BUILD_DIR="$PWD/Kernel/bml_mtd"
-      KERNEL_INITRD="$KERNEL_BUILD_DIR/usr/initramfs_ei22"
+      KERNEL_INITRD="$PWD/initramfs/initramfs_ei22"
       BUILD_OUT="$PWD/out/bml_ei22_out"
       BUILD_PLATFORM="BML.EI22"
       ZIMAGE_ARG="$LOCALVERSION.$BUILD_PLATFORM.$DATE"
@@ -78,7 +78,7 @@ source $PWD/functions
     #Platform Specific Variables
       DEFCONFIG_STRING=cleangb_bml_defconfig
       KERNEL_BUILD_DIR="$PWD/Kernel/bml_mtd"
-      KERNEL_INITRD="$KERNEL_BUILD_DIR/usr/initramfs_el30"
+      KERNEL_INITRD="$PWD/initramfs/initramfs_el30"
       BUILD_OUT="$PWD/out/bml_el30_out"
       BUILD_PLATFORM="CM7.EL30"
       ZIMAGE_ARG="$LOCALVERSION.$BUILD_PLATFORM.$DATE"
@@ -101,7 +101,7 @@ source $PWD/functions
       DEFCONFIG_STRING=cleangb_mtd_defconfig
       KERNEL_BUILD_DIR="$PWD/Kernel/bml_mtd"
       RECOVERY_INITRD="$PWD/recovery/recovery_mtd"
-      KERNEL_INITRD="$KERNEL_BUILD_DIR/usr/initramfs_mtd"
+      KERNEL_INITRD="$PWD/initramfs/initramfs_mtd"
       BUILD_OUT="$PWD/out/mtd_out"
       BUILD_PLATFORM="TW.MTD"
       ZIMAGE_ARG="$LOCALVERSION.$BUILD_PLATFORM.$DATE"
@@ -123,9 +123,9 @@ source $PWD/functions
     "4" )
     #Platform Specific Variables
       DEFCONFIG_STRING=cyanogenmod_epicmtd_defconfig
-      KERNEL_BUILD_DIR="$PWD/Kernel/miui_cm7"
+      KERNEL_BUILD_DIR="$PWD/Kernel/cm7_miui"
       RECOVERY_INITRD="$PWD/recovery/recovery_miui"
-      KERNEL_INITRD="$KERNEL_BUILD_DIR/usr/initramfs_miui"
+      KERNEL_INITRD="$PWD/initramfs/initramfs_miui"
       ZIMAGE_ARG="$LOCALVERSION.$BUILD_PLATFORM.$DATE"
       BUILD_OUT="$PWD/out/miui_out"
       BUILD_PLATFORM="MIUI.MTD"
@@ -147,9 +147,9 @@ source $PWD/functions
     "7" )
     #Platform Specific Variables
       DEFCONFIG_STRING=cyanogenmod_epicmtd_defconfig
-      KERNEL_BUILD_DIR="$PWD/Kernel/miui_cm7"
+      KERNEL_BUILD_DIR="$PWD/Kernel/cm7_miui"
       RECOVERY_INITRD="$PWD/recovery/recovery_cm7"
-      KERNEL_INITRD="$KERNEL_BUILD_DIR/usr/initramfs_cm7"
+      KERNEL_INITRD="$PWD/initramfs/initramfs_cm7"
       BUILD_OUT="$PWD/out/cm7_out"
       BUILD_PLATFORM="CM7.MTD"
       ZIMAGE_ARG="$LOCALVERSION.$BUILD_PLATFORM.$DATE"
