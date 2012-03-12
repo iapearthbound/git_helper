@@ -45,14 +45,14 @@ function REPO_MENU()
     echo $bld$grn"| [2] Auto Clone Samurai Kernel Repo                                           |"
     echo $bld$grn"| [3] Build Kernel (try to execute build_kernel.sh)                            |"
     echo $bld$grn"| [E] Extract Boot Image                                                       |"
-    echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
-    echo $bld$grn"| [I] ReInstall Git Helper                                                     |"
+    echo $bld$grn"| [Q] Command Prompt                                                           |"
+    echo $bld$cyn"|-Git-Helper-Uninstall---------------------------------------------------------|"
     echo $bld$grn"| [U] UnInstall Git Helper                                                     |"
     echo $bld$grn"| [X] Exit                                                                     |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"
     echo $bld$grn"| WORKING DIR    : $PWD"  
     if [ -e .git ] ; then
-      REPO=$(basename $PWD)
+      REPO=${PWD#*/home/$USER/}
       echo $bld$grn"| CURRENT REPO   : $REPO"
       CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
       echo $bld$grn"| CURRENT BRANCH : $CURRENT_BRANCH" 
@@ -121,20 +121,20 @@ function REPO_MENU()
         REPO_MENU
       ;;
       "E" | "e" )
-      #install git helper
+      #extract boot.img
         BOOT_IMG
+        echo $bld$rst
+        REPO_MENU
+      ;;
+      "Q" | "q" )
+      #command prompt
+        CMD
         echo $bld$rst
         REPO_MENU
       ;;
 ##############################################################
 #			Menu Divider			     #
 ##############################################################
-      "I" | "i" )
-      #install git helper
-        HELPER_INSTALL
-        echo $bld$rst
-        REPO_MENU
-      ;;
       "U" | "u" )
       #uninstall git helper
         UNINSTALL_HELPER
@@ -164,8 +164,8 @@ function REPO_MENU()
     echo $bld$grn"| [2] Auto Clone Samurai Kernel Repo                                           |"
     echo $bld$grn"| [3] Build Kernel (try to execute build_kernel.sh)                            |"
     echo $bld$grn"| [E] Extract Boot Image                                                       |"
-    echo $bld$cyn"|-Git-Helper-Install/Uninstall-------------------------------------------------|"
-    echo $bld$grn"| [I] ReInstall Git Helper                                                     |"
+    echo $bld$grn"| [Q] Command Prompt                                                           |"
+    echo $bld$cyn"|-Git-Helper-Uninstall---------------------------------------------------------|"
     echo $bld$grn"| [U] UnInstall Git Helper                                                     |"
     echo $bld$grn"| [X] Exit                                                                     |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
@@ -216,21 +216,21 @@ function REPO_MENU()
       echo $bld$rst
       REPO_MENU
     ;;
-      "E" | "e" )
-      #install git helper
-        BOOT_IMG
-        echo $bld$rst
-        REPO_MENU
-      ;;
-##############################################################
-#			Menu Divider			     #
-##############################################################
-    "I" | "i" )
-    #install git helper
-      HELPER_INSTALL
+    "E" | "e" )
+    #extract boot.img
+      BOOT_IMG
       echo $bld$rst
       REPO_MENU
     ;;
+    "Q" | "q" )
+    #command prompt
+      CMD
+      echo $bld$rst
+      REPO_MENU
+    ;;
+##############################################################
+#			Menu Divider			     #
+##############################################################
     "U" | "u" )
     #uninstall git helper
       UNINSTALL_HELPER
@@ -259,8 +259,9 @@ function SETUP_MENU()
   echo $bld$grn"| [G] Global Setup                                                             |"
   echo $bld$grn"| [S] Setup a new Repo                                                         |"
   echo $bld$grn"| [C] Clone a Repo                                                             |"
-  echo $bld$grn"| [U] Add Remote Host"
-  echo $bld$grn"| [F] Fetch Upstream Changes"
+  echo $bld$grn"| [U] Add Remote Host                                                          |"
+  echo $bld$grn"| [F] Fetch Upstream Changes                                                   |"
+  echo $bld$grn"| [Q] Command Prompt                                                           |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| [V] View/Switch Repo                                                         |"
   echo $bld$grn"| [X] Git Helper Menu                                                          |"
@@ -309,6 +310,12 @@ function SETUP_MENU()
 	MERGE_FETCH
         SETUP_MENU
       ;;
+      "Q" | "q" )
+      #command prompt
+        CMD
+        echo $bld$rst
+        REPO_MENU
+      ;;
       "X" | "x" )
       ;;
       * )
@@ -356,7 +363,7 @@ function NEW_REPO()
   echo $bld$grn"|          *NOW IS THE TIME TO ADD FILES TO YOUR LOCAL REPOSITORY*             |"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
-  ADD_FILE
+  ADD_FILES
   ADD_COMMIT
   ADD_ORIGIN_REMOTE
   PUSH
@@ -460,6 +467,7 @@ function COMMIT_MENU()
   echo $bld$grn"| [R] Remove Files From Repo                                                   |"
   echo $bld$grn"| [C] Commit Changes                                                           |"
   echo $bld$grn"| [P] Push Changes To Repo                                                     |"
+  echo $bld$grn"| [Q] Command Prompt                                                           |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| [V] View/Switch Repo                                                         |"
   echo $bld$grn"| [X] Git Helper Menu                                                          |"
@@ -475,7 +483,6 @@ function COMMIT_MENU()
       echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
       echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
       read -p "Press [Enter] key to continue..."
-      REPO_MENU
   fi
   read -p "  ENTER MENU OPTION : " commit_menu
   case "$commit_menu" in
@@ -499,10 +506,11 @@ function COMMIT_MENU()
       PUSH
       COMMIT_MENU
     ;;
-    "E" | "e" )
-    #switch repo
-      ENTER_DIRECTORY
-      COMMIT_MENU
+    "Q" | "q" )
+    #command prompt
+      CMD
+      echo $bld$rst
+      REPO_MENU
     ;;
     "V" | "v" )
     #switch repo
@@ -629,7 +637,7 @@ function PUSH()
   	echo $bld$cyn" ______________________________________________________________________________ "
   	echo $bld$cyn"| Pushing Your Changes                                                         |"
   	echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
-          git push origin $CURRENT_BRANCH
+          git push -u origin $CURRENT_BRANCH
         echo $bld$cyn"|------------------------------------------------------------------------------|"
   	echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   	read -p "Press [Enter] key to continue..."
@@ -645,7 +653,6 @@ function PUSH()
     echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read -p "Press [Enter] key to continue..."
-    REPO_MENU
   fi
 }
 
@@ -661,6 +668,7 @@ function BRANCH_MENU()
   echo $bld$grn"| [E] View Branches                                                            |"
   echo $bld$grn"| [S] Switch Branches                                                          |"
   echo $bld$grn"| [M] Merge Branch                                                             |"
+  echo $bld$grn"| [Q] Command Prompt                                                           |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| [V] View/Switch Repo                                                         |"
   echo $bld$grn"| [X] Git Helper Menu                                                          |"
@@ -676,7 +684,6 @@ function BRANCH_MENU()
     echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read -p "Press [Enter] key to continue..."
-    REPO_MENU
   fi
   read -p "  ENTER MENU OPTION : " branch_menu
   case "$branch_menu" in
@@ -699,6 +706,12 @@ function BRANCH_MENU()
     #Merge a Branch
       MERGE_BRANCH
       BRANCH_MENU
+    ;;
+    "Q" | "q" )
+    #command prompt
+      CMD
+      echo $bld$rst
+      REPO_MENU
     ;;
     "V" | "v" )
     #switch repo
@@ -841,6 +854,7 @@ function STASH_MENU()
   echo $bld$grn"| [S] Stash Changes                                                            |"
   echo $bld$grn"| [E] View Stash                                                               |"
   echo $bld$grn"| [L] Load a Stash                                                             |"
+  echo $bld$grn"| [Q] Command Prompt                                                           |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| [V] View/Switch Repo                                                         |"
   echo $bld$grn"| [X] Git Helper Menu                                                          |"
@@ -856,7 +870,6 @@ function STASH_MENU()
     echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read -p "Press [Enter] key to continue..."
-    REPO_MENU
   fi
   read -p "  ENTER MENU OPTION : " stash_menu
   case "$stash_menu" in
@@ -874,10 +887,11 @@ function STASH_MENU()
       LOAD_STASH
       STASH_MENU
     ;;
-    "E" | "e" )
-    #switch repo
-      ENTER_DIRECTORY
-      STASH_MENU
+    "Q" | "q" )
+    #command prompt
+      CMD
+      echo $bld$rst
+      REPO_MENU
     ;;
     "V" | "v" )
     #switch repo
@@ -941,6 +955,7 @@ function PATCH_MENU()
   echo $bld$grn"| [E] View Commits                                                             |"
   echo $bld$grn"| [C] Create a New Patch                                                       |"
   echo $bld$grn"| [P] Patch Repo                                                               |"
+  echo $bld$grn"| [Q] Command Prompt                                                           |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| [V] View/Switch Repo                                                         |"
   echo $bld$grn"| [X] Git Helper Menu                                                          |"
@@ -956,7 +971,6 @@ function PATCH_MENU()
     echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read -p "Press [Enter] key to continue..."
-    REPO_MENU
   fi
   read -p "  ENTER MENU OPTION : " patch_menu
   case "$patch_menu" in
@@ -974,6 +988,12 @@ function PATCH_MENU()
     #Patch a Repo
       PATCH_REPO
       PATCH_MENU
+    ;;
+    "Q" | "q" )
+    #command prompt
+      CMD
+      echo $bld$rst
+      REPO_MENU
     ;;
     "V" | "v" )
     #switch repo
@@ -1067,7 +1087,6 @@ function ENTER_DIRECTORY()
     echo $bld$grn"| Current Directory is Not A Repo (enter a git Repo to view more menu options) |"
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
     read -p "Press [Enter] key to continue..."
-    REPO_MENU
   fi
 }
 
@@ -1081,10 +1100,10 @@ function CLONE_SAMURAI()
   echo $bld$cyn"| Cloning Samurai Repo                                                         |"
   echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
   cd ~/
-  git clone git@github.com:iapearthbound/ave.cm7.git
-  cd ~/ave.cm7
+  git clone git://github.com/iapearthbound/1samurai.multi.git
+  cd ~/1samurai.multi
   echo $bld$cyn"|------------------------------------------------------------------------------|"
-  git remote add upstream git@github.com:iapearthbound/ave.cm7.git
+  git remote add upstream git://github.com/iapearthbound/1samurai.multi.git
   echo $bld$cyn"|------------------------------------------------------------------------------|"
   echo $bld$grn"| WORKING DIR    : $PWD" 
   if [ -e .git ] ; then
@@ -1122,7 +1141,6 @@ function BUILD_KERNEL()
   echo $bld$grn"| Execution of build_kernel has succeeded...                                   |"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
   read -p "Press [Enter] key to continue..."
-  REPO_MENU	
 }
 
 function CHANGE_FILE_NAME()
@@ -1186,11 +1204,13 @@ function SETUP_BUILD()
     echo $bld$cyn"|******************************************************************************|"
     echo $bld$grn"|                          SOURCE ALREADY EXISTS                               |"
     echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+  read -p "Press [Enter] key to continue..."
   else
     sudo -S add-apt-repository "deb http://archive.canonical.com/ lucid partner"
     echo $bld$cyn"|******************************************************************************|"
     echo $bld$grn"|   deb http://archive.canonical.com/ lucid partner Added To APT Repository    |"
     echo $bld$cyn"|______________________________________________________________________________|"
+  read -p "Press [Enter] key to continue..."
   fi
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Updating APT                                                                 |"
@@ -1200,6 +1220,7 @@ function SETUP_BUILD()
   echo $bld$cyn"|******************************************************************************|"
   echo $bld$grn"|                               APT UPDATED                                    |"
   echo $bld$cyn"|______________________________________________________________________________|"
+  read -p "Press [Enter] key to continue..."
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Installing Java JDK 6                                                        |"
   echo $bld$cyn"|                                                                              |"
@@ -1208,6 +1229,7 @@ function SETUP_BUILD()
   echo $bld$cyn"|******************************************************************************|"
   echo $bld$grn"|                          JAVA JDK 6 INSTALLED                                |"
   echo $bld$cyn"|______________________________________________________________________________|"
+  read -p "Press [Enter] key to continue..."
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Installing Libs and Other Needed Files To Compile                            |"
   echo $bld$cyn"|                                                                              |"
@@ -1217,6 +1239,7 @@ function SETUP_BUILD()
   echo $bld$cyn"|******************************************************************************|"
   echo $bld$grn"|                           Packages Installed                                 |"
   echo $bld$cyn"|______________________________________________________________________________|"
+  read -p "Press [Enter] key to continue..."
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$grn"| Adding Udev Rules for Usb Access                                             |"
   echo $bld$cyn"|                                                                              |"
@@ -1258,6 +1281,80 @@ v10='SUBSYSTEM=="usb", ATTR{idVendor}=="0451", ATTR{idProduct}=="d022", MODE="06
   echo $bld$cyn"|                                                                              |"
   echo $bld$grn"|                         USB Rules Have Been Set                              |"
   echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+  read -p "Press [Enter] key to continue..."
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$grn"| Installing Android SDK                                                       |"
+  echo $bld$cyn"|                                                                              |"
+  echo $bld$cyn"|******************************************************************************|"$bld$grn
+    if [ -e $user/android-sdk-linux ] ; then
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$cyn"|                                                                              |"
+      echo $bld$grn"|                Android SDK Has Been Detected On Your System                  |"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$grn"| Checking Platform-Tools                                                      |"
+      echo $bld$cyn"|                                                                              |"
+      echo $bld$cyn"|******************************************************************************|"$bld$grn
+	if [ -e $USER/android-sdk-linux/platform-tools/adb ] ; then
+	  A_PATH="/home/$USER/android-sdk-linux/platform-tools"
+          grep -Fxq "$A_PATH" /home/$USER/.bashrc
+            echo $bld$cyn" ______________________________________________________________________________ "
+            echo $bld$cyn"|                                                                              |"
+      	    echo $bld$grn"|                       SDK Is Already In Your .bashrc                         |"
+      	    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+      	    read -p "Press [Enter] key to continue..."
+	else
+	  cd $PWD/android-sdk-linux/tools
+ 	    ./android
+          echo $bld$cyn" ______________________________________________________________________________ "
+          echo $bld$cyn"|                                                                              |"
+          echo $bld$grn"|        Please Take The Time To Install The Android SDK Platform-Tools        |"
+          echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+          read -p "Press [Enter] key to continue..."
+          export PATH=$PATH:/home/$USER/android-sdk-linux/platform-tools
+	  echo $PATH
+	  sudo adb start-server
+            echo $bld$cyn" ______________________________________________________________________________ "
+            echo $bld$cyn"|                                                                              |"
+      	    echo $bld$grn"|         PLEASE PLUG IN YOUR DEVICE SO WE CAN CHECK ADB CONNECTION            |"
+      	    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+	  adb devices
+	fi
+    else
+      wget http://dl.google.com/android/android-sdk_r16-linux.tgz -O - | tar -zxvf -
+      cd $PWD/android-sdk-linux/tools
+ 	./android
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$cyn"|                                                                              |"
+      echo $bld$grn"|        Please Take The Time To Install The Android SDK Platform-Tools        |"
+      echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+      read -p "Press [Enter] key to continue..."
+      echo $bld$cyn" ______________________________________________________________________________ "
+      echo $bld$grn"| Checking Platform-Tools                                                      |"
+      echo $bld$cyn"|                                                                              |"
+      echo $bld$cyn"|******************************************************************************|"$bld$grn
+	if [ -e $USER/android-sdk-linux/platform-tools/adb ] ; then
+	  A_PATH="/home/$USER/android-sdk-linux/platform-tools"
+          grep -Fxq "$A_PATH" /home/$USER/.bashrc
+            echo $bld$cyn" ______________________________________________________________________________ "
+            echo $bld$cyn"|                                                                              |"
+      	    echo $bld$grn"|                       SDK Is Already In Your .bashrc                         |"
+      	    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+      	    read -p "Press [Enter] key to continue..."
+	else   
+          export PATH=$PATH:/home/$USER/android-sdk-linux/platform-tools
+	  echo $PATH
+	  sudo adb start-server
+            echo $bld$cyn" ______________________________________________________________________________ "
+            echo $bld$cyn"|                                                                              |"
+      	    echo $bld$grn"|         PLEASE PLUG IN YOUR DEVICE SO WE CAN CHECK ADB CONNECTION            |"
+      	    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+	  adb devices
+	fi
+      fi
+     
+
+
   echo
   echo $bld$cyn" ______________________________________________________________________________ "
   echo $bld$cyn"|                                                                              |"
@@ -1328,12 +1425,12 @@ function BOOT_IMG()
 
   # Split initramfs from zImage
   echo "Finding initramfs..."
-  pos=`grep -P -a -b --only-matching '\x1F\x8B\x08' $DIR/$out/zImage | cut -f 1 -d : | grep '1' | awk '(NR==1)'`
+    pos=`grep -P -a -b --only-matching '\x1F\x8B\x08' $DIR/$out/zImage | cut -f 1 -d : | grep '1' | awk '(NR==1)'`
   dd if=$DIR/$out/zImage bs=$pos skip=1 2> /dev/null | gunzip > $DIR/$out/initramfs.dat 2> /dev/null
-  start=`grep -a -b --only-matching '070701' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
-  end=`grep -a -b --only-matching 'TRAILER!!!' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
-  end=$((end + 10))
-  count=$((end - start))
+    start=`grep -a -b --only-matching '070701' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
+    end=`grep -a -b --only-matching 'TRAILER!!!' $DIR/$out/initramfs.dat | head -1 | cut -f 1 -d :`
+    end=$((end + 10))
+    count=$((end - start))
   echo "Spliting initramfs from zImage..."
   dd if=$DIR/$out/initramfs.dat ibs=$start skip=1 of=$DIR/$out/temp >& /dev/null
   dd if=$DIR/$out/temp bs=$count count=1 of=$DIR/$out/initramfs.cpio >& /dev/null
@@ -1359,6 +1456,28 @@ function BOOT_IMG()
 }
 
 ##############################################################
+#		   	Command Prompt		  	     #
+##############################################################
+
+function CMD()
+{
+  echo $bld$cyn" ______________________________________________________________________________ "
+  echo $bld$cyn"| Please Input The Command You Would Like To Execute (x to return to GitHelper)|"
+  echo $bld$cyn"|------------------------------------------------------------------------------|"$bld$grn
+  CMD_P=${PWD#*/home/$USER/}
+  read -p "  $USER@ubuntu~/$CMD_P : " CMD_1
+  if [ "$CMD_1" = 'x' ] ; then
+    echo $bld$cyn"|******************************************************************************|"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+  else
+    eval "$CMD_1"
+    echo $bld$cyn"|******************************************************************************|"
+    echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
+    CMD
+  fi
+}
+
+##############################################################
 #		   	Helper Install		  	     #
 ##############################################################
 
@@ -1369,7 +1488,6 @@ function HELPER_INSTALL()
     echo $bld$cyn"|------------------------------------------------------------------------------|"
     echo $bld$grn"| [Y] Yes <-(run from any terminal directory)                                  |"
     echo $bld$red"| [N] NO <-(one time run from particualr terminal directory)                   |"
-    echo $bld$grn"| [R] ReInstall <-(Use This For Updates)                                       |"
     echo $bld$cyn"|------------------------------------------------------------------------------|"
     echo $bld$grn"|     This means that you will not have to cd to the directory where git helper|"
     echo $bld$grn"| is located and type ./githelper. After installation you can run the command  |"
@@ -1379,6 +1497,12 @@ function HELPER_INSTALL()
     case "$install_helper" in
       "Y" | "y" )
         sudo -S cp $PWD/githelper /usr/bin/
+      	sudo -S sed -i '$d' /usr/bin/githelper
+      	sudo -S sed -i '$d' /usr/bin/githelper
+      	sudo -S sed -i '$d' /usr/bin/githelper
+      	sudo -S sed -i '$d' /usr/bin/githelper
+      	sudo -S sed -i '$d' /usr/bin/githelper
+	sudo sh -c " echo 'REPO_MENU' >> /usr/bin/githelper"
         echo $bld$cyn" ______________________________________________________________________________ "
         echo $bld$cyn"|                                                                              |"
         echo $bld$cyn"|******************************************************************************|"
@@ -1389,18 +1513,7 @@ function HELPER_INSTALL()
         githelper
       ;;
       "N" | "n" )
-        REPO_MENU
-      ;;
-      "R" | "r" )
-        sudo -S cp $PWD/githelper /usr/bin/
-        echo $bld$cyn" ______________________________________________________________________________ "
-        echo $bld$cyn"|                                                                              |"
-        echo $bld$cyn"|******************************************************************************|"
-	echo $bld$grn"|                      Git Helper Has Been ReInstalled                         |"		
-        echo $bld$cyn"|******************************************************************************|"
-        echo $bld$cyn"|______________________________________________________________________________|"$bld$grn
-        read -p "Press [Enter] key to continue..."
-	githelper
+	REPO_MENU
       ;;
       * )
         echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
@@ -1436,7 +1549,6 @@ function UNINSTALL_HELPER()
     ;;
     "N" | "n" )
       echo $bld$rst
-      REPO_MENU
     ;;
     * )
       echo $bld$red"**********************You*Have*Entered*An*Incorrect*Option**********************"
@@ -1450,7 +1562,7 @@ function UNINSTALL_HELPER()
 ##############################################################
   TITLE
   if [ -e /usr/bin/githelper ] ; then
-    REPO_MENU
+    githelper
   else
     HELPER_INSTALL
   fi
